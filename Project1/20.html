@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Katsuya</title>
+    <link rel="icon" type="image/png" href="Logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --red: #d02b1c;
+            --cream: #f7f2e8
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        body {
+            background: #000;
+            color: var(--cream);
+            font-family: "Lora", Georgia, serif
+        }
+
+        .poster {
+            min-height: 100svh;
+            position: relative;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            text-align: center;
+            padding: 40px 20px
+        }
+
+        .sun {
+            position: absolute;
+            width: min(92vw, 86svh);
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background: repeating-linear-gradient(-35deg, var(--red) 0 90px, #000 90px 106px);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%)
+        }
+
+        .poster h1 {
+            position: relative;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 700;
+            font-size: clamp(3.4rem, 14vw, 12rem);
+            letter-spacing: -.02em;
+            line-height: .9;
+            mix-blend-mode: difference;
+            color: #fff
+        }
+
+        .poster nav {
+            position: absolute;
+            top: 24px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 34px
+        }
+
+        .poster nav a {
+            color: var(--cream);
+            text-decoration: none;
+            font-size: .95rem;
+            letter-spacing: .04em
+        }
+
+        .poster nav a:hover {
+            color: var(--red)
+        }
+
+        .belt {
+            overflow: hidden;
+            background: #000;
+            padding: 50px 0;
+            border-top: 1px solid var(--red);
+            border-bottom: 1px solid var(--red)
+        }
+
+        .belt div {
+            display: flex;
+            width: max-content;
+            white-space: nowrap;
+            font-size: clamp(3rem, 9vw, 8rem);
+            line-height: 1.1
+        }
+
+        .belt span {
+            padding-right: .5em
+        }
+
+        .belt .a {
+            color: transparent;
+            -webkit-text-stroke: 1.5px rgba(247, 242, 232, .55);
+            animation: l 30s linear infinite
+        }
+
+        .belt .b {
+            color: var(--red);
+            animation: r 30s linear infinite
+        }
+
+        @keyframes l {
+            to {
+                transform: translateX(-50%)
+            }
+        }
+
+        @keyframes r {
+            from {
+                transform: translateX(-50%)
+            }
+
+            to {
+                transform: none
+            }
+        }
+
+        .cats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr)
+        }
+
+        .cats a {
+            display: block;
+            padding: 70px 40px;
+            border: 1px solid #222;
+            color: var(--cream);
+            text-decoration: none;
+            font-size: clamp(2rem, 5vw, 4rem);
+            transition: background .3s, color .3s
+        }
+
+        .cats a small {
+            display: block;
+            font-size: .95rem;
+            font-style: italic;
+            margin-top: 10px;
+            color: #9b9384;
+            transition: color .3s
+        }
+
+        .cats a:hover {
+            background: var(--red)
+        }
+
+        .cats a:hover small {
+            color: var(--cream)
+        }
+
+        .foot {
+            padding: 60px 20px;
+            text-align: center;
+            color: #b9b1a2;
+            line-height: 1.8
+        }
+
+        .foot b {
+            display: block;
+            color: var(--cream);
+            font-weight: 400;
+            font-size: 1.4rem
+        }
+
+        @media(max-width:640px) {
+            .cats {
+                grid-template-columns: 1fr
+            }
+
+            .cats a {
+                padding: 44px 24px
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <section class="poster">
+        <nav><a href="#menu">Menu</a><a href="#visit">Visit</a></nav>
+        <div class="sun"></div>
+        <h1>KATSUYA</h1>
+    </section>
+
+    <section class="belt">
+        <div class="a"><span>Looking forward to hosting you soon!</span><span>Looking forward to hosting you
+                soon!</span><span>Looking forward to hosting you soon!</span><span>Looking forward to hosting you
+                soon!</span></div>
+        <div class="b"><span>Looking forward to hosting you soon!</span><span>Looking forward to hosting you
+                soon!</span><span>Looking forward to hosting you soon!</span><span>Looking forward to hosting you
+                soon!</span></div>
+    </section>
+
+    <section class="cats" id="menu">
+        <a href="#">Katsu Bento</a>
+        <a href="#">Sushi Bento</a>
+        <a href="#">À La Carte</a>
+        <a href="#">Side Dishes</a>
+    </section>
+
+    <section class="foot" id="visit">
+        <b>6301 Delmar Blvd, St. Louis</b>
+        Open daily 11am–8pm<br>(314) 296-3368
+    </section>
+</body>
+
+</html>

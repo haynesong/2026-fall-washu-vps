@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Katsuya</title>
+
+    <style>
+        :root {
+            --paper: #f4eee2;
+            --ink: #24221e;
+            --red: #a52a24;
+            --line: #c8bdab;
+            --muted: #675e51;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--paper);
+            color: var(--ink);
+            font-family: Georgia, "Times New Roman", serif;
+            line-height: 1.6;
+        }
+
+        a {
+            color: inherit;
+            text-underline-offset: 5px;
+        }
+
+        a:focus-visible,
+        summary:focus-visible {
+            outline: 2px solid var(--red);
+            outline-offset: 5px;
+        }
+
+        .sidebar {
+            position: fixed;
+            inset: 0 auto 0 0;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            width: 92px;
+            padding: 25px 12px;
+            background: var(--ink);
+            color: var(--paper);
+        }
+
+        .sidebar a {
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+            text-decoration: none;
+            letter-spacing: 2px;
+        }
+
+        .sidebar-word {
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            font-family: Arial, sans-serif;
+            font-size: 23px;
+            font-weight: bold;
+            letter-spacing: 8px;
+        }
+
+        .sidebar small {
+            writing-mode: vertical-rl;
+            font-family: Arial, sans-serif;
+            font-size: 10px;
+            letter-spacing: 2px;
+        }
+
+        .page {
+            margin-left: 92px;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 530px;
+            border-bottom: 1px solid var(--ink);
+        }
+
+        .hero-copy {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 50px;
+        }
+
+        .logo {
+            width: 100px;
+            height: auto;
+            margin-bottom: 30px;
+        }
+
+        .eyebrow {
+            margin: 0 0 12px;
+            color: var(--red);
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            font-size: clamp(42px, 6vw, 90px);
+            font-weight: 900;
+            letter-spacing: -3px;
+            line-height: 1;
+        }
+
+        .hero-copy>p:not(.eyebrow) {
+            max-width: 300px;
+            margin: 20px 0;
+            font-size: 16px;
+        }
+
+        .hours {
+            margin-top: 20px;
+            padding: 10px 16px;
+            border: 2px solid var(--red);
+            color: var(--red);
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            transform: rotate(-3deg);
+        }
+
+        .hero-photo {
+            position: relative;
+            min-width: 0;
+            margin: 0;
+            overflow: hidden;
+            background: var(--ink);
+        }
+
+        .hero-photo img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-photo figcaption {
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+            padding: 8px 14px;
+            background: var(--paper);
+            color: var(--ink);
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+            letter-spacing: 1px;
+        }
+
+        .navigation {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            border-bottom: 1px solid var(--ink);
+        }
+
+        .navigation a {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 22px;
+            border-right: 1px solid var(--ink);
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            font-weight: bold;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .navigation a:last-child {
+            border-right: none;
+        }
+
+        .navigation span {
+            color: var(--red);
+            font-family: Georgia, serif;
+            font-size: 23px;
+            font-weight: normal;
+        }
+
+        .navigation a:hover {
+            background: var(--red);
+            color: var(--paper);
+        }
+
+        .navigation a:hover span {
+            color: var(--paper);
+        }
+
+        main {
+            max-width: 1400px;
+            margin: auto;
+            padding: 0 45px;
+        }
+
+        .menu-section {
+            padding: 55px 0;
+            border-bottom: 1px solid var(--ink);
+            scroll-margin-top: 20px;
+        }
+
+        .section-heading {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .section-number {
+            color: var(--red);
+            font-size: 58px;
+            line-height: 1;
+        }
+
+        h2 {
+            margin: 0;
+            font-size: clamp(28px, 4vw, 43px);
+            font-weight: normal;
+            line-height: 1.15;
+        }
+
+        .section-note {
+            max-width: 160px;
+            color: var(--muted);
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+            text-align: right;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .included {
+            max-width: 850px;
+            margin: 0 0 30px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .included b {
+            color: var(--ink);
+        }
+
+        .katsu-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            border-top: 1px solid var(--line);
+            border-left: 1px solid var(--line);
+        }
+
+        .katsu-item {
+            display: flex;
+            flex-direction: column;
+            min-height: 245px;
+            padding: 22px;
+            border-right: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .katsu-item h3 {
+            margin: 0 0 12px;
+            font-size: 21px;
+            line-height: 1.25;
+        }
+
+        .katsu-item p {
+            margin: 0 0 18px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .katsu-item .price {
+            margin-top: auto;
+            color: var(--red);
+            font-size: 22px;
+        }
+
+        .price {
+            white-space: nowrap;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .katsu-item details {
+            margin-bottom: 18px;
+            font-size: 13px;
+        }
+
+        .katsu-item details p {
+            margin-top: 10px;
+        }
+
+        summary {
+            cursor: pointer;
+        }
+
+        summary::marker {
+            color: var(--red);
+        }
+
+        .dish-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0 40px;
+            align-items: start;
+        }
+
+        .dish {
+            border-top: 1px solid var(--line);
+        }
+
+        .dish summary {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto 12px;
+            align-items: baseline;
+            gap: 12px;
+            padding: 17px 0;
+            list-style: none;
+        }
+
+        .dish summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .dish summary::after {
+            content: "+";
+            color: var(--red);
+            font-family: Arial, sans-serif;
+        }
+
+        .dish[open] summary::after {
+            content: "−";
+        }
+
+        .dish summary:hover .dish-name {
+            color: var(--red);
+        }
+
+        .dish-name {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .dish .price {
+            color: var(--red);
+            font-size: 15px;
+        }
+
+        .dish p {
+            margin: 0 24px 20px 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .plain-dish {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: baseline;
+            gap: 12px;
+            padding: 17px 24px 17px 0;
+            border-top: 1px solid var(--line);
+        }
+
+        .plain-dish .price {
+            color: var(--red);
+        }
+
+        em {
+            color: var(--red);
+        }
+
+        .interior-strip {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            margin: 0;
+            border-bottom: 1px solid var(--ink);
+        }
+
+        .interior-strip img {
+            display: block;
+            width: 100%;
+            height: 330px;
+            object-fit: cover;
+        }
+
+        .interior-strip figcaption {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 35px;
+            background: var(--red);
+            color: var(--paper);
+        }
+
+        .interior-strip b {
+            font-size: 34px;
+            font-weight: normal;
+            line-height: 1.2;
+        }
+
+        .interior-strip p {
+            font-size: 14px;
+        }
+
+        .sides-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .sides-table th,
+        .sides-table td {
+            padding: 15px 12px;
+            text-align: left;
+            vertical-align: top;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .sides-table thead th {
+            color: var(--red);
+            font-family: Arial, sans-serif;
+            font-size: 10px;
+            font-weight: normal;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .sides-table tbody th {
+            width: 32%;
+            font-size: 15px;
+            font-weight: normal;
+        }
+
+        .sides-table td {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .sides-table th:first-child,
+        .sides-table td:first-child {
+            padding-left: 0;
+        }
+
+        .sides-table th:last-child,
+        .sides-table td:last-child {
+            padding-right: 0;
+            color: var(--red);
+            text-align: right;
+            white-space: nowrap;
+            font-variant-numeric: tabular-nums;
+        }
+
+        footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 25px;
+            padding: 30px 45px;
+            background: var(--ink);
+            color: var(--paper);
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 13px;
+        }
+
+        footer a {
+            font-size: 12px;
+        }
+
+        footer a:focus-visible,
+        .sidebar a:focus-visible {
+            outline-color: var(--paper);
+        }
+
+        @media (max-width: 1050px) {
+            .hero-copy {
+                padding: 35px;
+            }
+
+            .katsu-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .navigation a {
+                gap: 10px;
+                padding: 18px 12px;
+                font-size: 10px;
+            }
+        }
+
+        @media (max-width: 750px) {
+            .sidebar {
+                position: static;
+                flex-direction: row;
+                width: 100%;
+                padding: 12px 20px;
+            }
+
+            .sidebar-word {
+                writing-mode: horizontal-tb;
+                font-size: 14px;
+                letter-spacing: 3px;
+            }
+
+            .sidebar small {
+                writing-mode: horizontal-tb;
+                font-size: 9px;
+            }
+
+            .page {
+                margin-left: 0;
+            }
+
+            .hero {
+                min-height: auto;
+            }
+
+            .hero-copy {
+                padding: 30px 20px;
+            }
+
+            .logo {
+                width: 70px;
+                margin-bottom: 20px;
+            }
+
+            h1 {
+                font-size: 36px;
+                letter-spacing: -1px;
+            }
+
+            .hero-copy>p:not(.eyebrow) {
+                font-size: 14px;
+            }
+
+            .hours {
+                padding: 8px;
+                font-size: 10px;
+            }
+
+            .hero-photo figcaption {
+                right: 10px;
+                bottom: 10px;
+                font-size: 9px;
+            }
+
+            .navigation {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .navigation a:nth-child(2) {
+                border-right: 0;
+            }
+
+            .navigation a:nth-child(-n+2) {
+                border-bottom: 1px solid var(--ink);
+            }
+
+            main {
+                padding: 0 22px;
+            }
+
+            .menu-section {
+                padding: 35px 0;
+            }
+
+            .section-heading {
+                grid-template-columns: auto 1fr;
+                gap: 15px;
+            }
+
+            .section-number {
+                font-size: 42px;
+            }
+
+            .section-note {
+                display: none;
+            }
+
+            .dish-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .interior-strip {
+                grid-template-columns: 1fr;
+            }
+
+            .interior-strip img {
+                height: 280px;
+            }
+
+            .interior-strip figcaption {
+                padding: 25px;
+            }
+
+            footer {
+                padding: 25px 22px;
+            }
+        }
+
+        @media (max-width: 450px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-photo img {
+                height: 260px;
+            }
+
+            .katsu-item {
+                padding: 15px;
+            }
+
+            .katsu-item h3 {
+                font-size: 18px;
+            }
+
+            .sides-table th,
+            .sides-table td {
+                padding: 12px 6px;
+            }
+
+            footer {
+                align-items: flex-start;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .navigation a {
+                transition: none;
+            }
+        }
+
+        @media (max-width: 750px) {
+            .sidebar {
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+
+            #top,
+            .menu-section {
+                scroll-margin-top: 80px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar" aria-label="Restaurant name">
+        <a href="#top">↑ TOP</a>
+        <span class="sidebar-word">KATSUYA</span>
+        <small>ST. LOUIS</small>
+    </aside>
+
+    <div class="page">
+
+        <header class="hero" id="top">
+            <div class="hero-copy">
+                <img class="logo" src="katsuya.png" alt="Katsuya logo">
+                <p class="eyebrow">6301 Delmar Blvd</p>
+                <h1>KATSUYA</h1>
+                <p>Japanese Cutlets<br>&amp; Sushi Rolls</p>
+                <div class="hours">OPEN DAILY · 11AM–8PM</div>
+            </div>
+
+            <figure class="hero-photo">
+                <img src="food.jpeg" alt="Katsuya bento boxes, sushi, and side dishes">
+                <figcaption>BENTO · SUSHI · SIDES</figcaption>
+            </figure>
+        </header>
+
+        <nav class="navigation" aria-label="Menu sections">
+            <a href="#katsu"><span>01</span> Katsu Bento</a>
+            <a href="#sushi"><span>02</span> Sushi Bento</a>
+            <a href="#alacarte"><span>03</span> À La Carte</a>
+            <a href="#sides"><span>04</span> Side Dishes</a>
+        </nav>
+
+        <main>
+
+            <section class="menu-section" id="katsu">
+                <div class="section-heading">
+                    <span class="section-number">01</span>
+                    <h2>Katsu Bento Boxes</h2>
+                    <span class="section-note">Select a dish<br>for details</span>
+                </div>
+
+                <p class="included">
+                    Your choice of protein, coated with panko breading and deep-fried.
+                    <b>Served with</b> rice, salad with ginger dressing, pickled vegetables,
+                    potato salad, seaweed salad, edamame, tamago, and a daily side dish.
+                </p>
+
+                <div class="dish-grid">
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Pork Katsu</span>
+                            <span class="price">$15.50</span>
+                        </summary>
+                        <p>Pork loin covered with panko breadcrumbs and deep-fried.</p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Chicken Katsu</span>
+                            <span class="price">$14.50</span>
+                        </summary>
+                        <p>Chicken breast covered with panko breadcrumbs and deep-fried.</p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Shrimp Katsu</span>
+                            <span class="price">$16</span>
+                        </summary>
+                        <p>Shrimp covered with panko breadcrumbs and deep-fried.</p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Tofu Katsu</span>
+                            <span class="price">$14</span>
+                        </summary>
+                        <p>Tofu covered with panko breadcrumbs and deep-fried. <em>Box filled with vegetarian
+                                items.</em></p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Cheese Katsu</span>
+                            <span class="price">$16</span>
+                        </summary>
+                        <p>Pork and melted mozzarella covered with panko breadcrumbs and deep-fried.</p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Menchi Katsu</span>
+                            <span class="price">$15</span>
+                        </summary>
+                        <p>Ground pork, chicken, and onion formed into a patty, covered with panko breadcrumbs, and
+                            deep-fried.</p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Potato Korokke Box</span>
+                            <span class="price">$15</span>
+                        </summary>
+                        <p>
+                            Three fried potato croquettes. Served with rice, salad with ginger
+                            dressing, pickled vegetables, potato salad, seaweed salad, edamame,
+                            and tamago. <em>Vegetarian. All vegetarian sides.</em>
+                        </p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Fish Katsu</span>
+                            <span class="price">$16</span>
+                        </summary>
+                        <p>Three pieces of white fish, flounder or snapper, covered with panko breadcrumbs and
+                            deep-fried.</p>
+                    </details>
+                </div>
+            </section>
+
+            <section class="menu-section" id="sushi">
+                <div class="section-heading">
+                    <span class="section-number">02</span>
+                    <h2>Sushi Bento Boxes</h2>
+                    <span class="section-note">Select a dish<br>for details</span>
+                </div>
+
+                <p class="included">
+                    <b>Served with</b> salad with ginger dressing, seaweed salad,
+                    edamame, potato salad, tamago, cake, and a daily side dish.
+                </p>
+
+                <div class="dish-grid">
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Katsuya Roll</span>
+                            <span class="price">$16</span>
+                        </summary>
+                        <p>Tuna, salmon, crab, tempura shrimp, avocado, and scallions. <em>Contains raw fish.</em></p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Alaskan Roll</span>
+                            <span class="price">$14</span>
+                        </summary>
+                        <p>California roll with imitation crab meat, cucumber, avocado, and rice, topped with seared
+                            Alaskan king salmon.</p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Spicy Salmon Roll</span>
+                            <span class="price">$14</span>
+                        </summary>
+                        <p>California roll with imitation crab meat, cucumber, avocado, and rice, topped with spicy
+                            salmon, house sauce, and scallions. <em>Contains raw fish.</em></p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Spicy Tuna Roll</span>
+                            <span class="price">$14</span>
+                        </summary>
+                        <p>California roll with imitation crab meat, cucumber, avocado, and rice, topped with spicy tuna
+                            and Sriracha. <em>Contains raw fish.</em></p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Crunch Roll</span>
+                            <span class="price">$14</span>
+                        </summary>
+                        <p>California roll with imitation crab meat, cucumber, avocado, and rice, topped with crab meat,
+                            crunch mix, and house sauce.</p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Fried Philly Roll</span>
+                            <span class="price">$14</span>
+                        </summary>
+                        <p>Deep-fried roll with cream cheese, avocado, salmon, eel sauce, and spicy mayo.</p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Veggie Roll</span>
+                            <span class="price">$14</span>
+                        </summary>
+                        <p>Cucumber, avocado, and mixed vegetables wrapped in seaweed paper. <em>Vegetarian.</em></p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">King Kong Roll</span>
+                            <span class="price">$16</span>
+                        </summary>
+                        <p>Deep-fried roll with two tempura shrimp, tuna, cucumber, avocado, and imitation crab meat.
+                            Topped with eel sauce and spicy mayo.</p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Spider Roll</span>
+                            <span class="price">$17</span>
+                        </summary>
+                        <p>Fried soft-shell crab, imitation crab meat, cucumber, avocado, and masago, topped with eel
+                            sauce.</p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Salmon Nigiri (6)</span>
+                            <span class="price">$16</span>
+                        </summary>
+                        <p>Six pieces. Slices of salmon placed on top of sushi rice.</p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Shrimp Nigiri (6)</span>
+                            <span class="price">$16</span>
+                        </summary>
+                        <p>Six pieces.</p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Salmon/Shrimp Nigiri (6)</span>
+                            <span class="price">$16.50</span>
+                        </summary>
+                        <p>Three salmon nigiri and three shrimp nigiri.</p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Salmon/Avocado Roll</span>
+                            <span class="price">$14</span>
+                        </summary>
+                        <p>Salmon and avocado.</p>
+                    </details>
+                </div>
+            </section>
+
+            <section class="menu-section" id="alacarte">
+                <div class="section-heading">
+                    <span class="section-number">03</span>
+                    <h2>À La Carte Sushi</h2>
+                    <span class="section-note">Select a dish<br>for details</span>
+                </div>
+
+                <p class="included">
+                    Individual rolls, packed with ginger, wasabi, and soy sauce.
+                </p>
+
+                <div class="dish-grid">
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Single Cali Roll</span>
+                            <span class="price">$7.50</span>
+                        </summary>
+                        <p>California roll with imitation crab meat, cucumber, avocado, and rice, wrapped in seaweed
+                            paper.</p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Single Katsuya Roll</span>
+                            <span class="price">$11</span>
+                        </summary>
+                        <p>Tuna, salmon, imitation crab meat, tempura shrimp, avocado, and scallions. <em>Contains raw
+                                fish.</em></p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Single Alaskan Roll</span>
+                            <span class="price">$10</span>
+                        </summary>
+                        <p>California roll with imitation crab meat, cucumber, avocado, and rice, topped with seared
+                            Alaskan king salmon. <em>Contains raw fish.</em></p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Single Spicy Salmon</span>
+                            <span class="price">$10</span>
+                        </summary>
+                        <p>California roll with imitation crab meat, cucumber, avocado, and rice, topped with spicy
+                            salmon, house sauce, and scallions. <em>Contains raw fish.</em></p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Single Spicy Tuna Roll</span>
+                            <span class="price">$10</span>
+                        </summary>
+                        <p>California roll with imitation crab meat, cucumber, avocado, and rice, topped with spicy
+                            tuna, Sriracha sauce, and scallions. <em>Contains raw fish.</em></p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Single Crunch Roll</span>
+                            <span class="price">$10</span>
+                        </summary>
+                        <p>California roll with imitation crab meat, cucumber, avocado, and rice, topped with crab meat,
+                            crunch mix, and house sauce.</p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Single Fried Philly</span>
+                            <span class="price">$10</span>
+                        </summary>
+                        <p>Deep-fried roll with cream cheese, avocado, salmon, imitation crab meat, eel sauce, and spicy
+                            mayo.</p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Single Veggie Roll</span>
+                            <span class="price">$8</span>
+                        </summary>
+                        <p>Cucumber, avocado, and mixed vegetables rolled with rice and seaweed paper.</p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Single King Kong Roll</span>
+                            <span class="price">$11</span>
+                        </summary>
+                        <p>Deep-fried roll with two tempura shrimp, tuna, cucumber, avocado, and imitation crab meat.
+                            Topped with eel sauce and spicy mayo.</p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Salmon Nigiri (6)</span>
+                            <span class="price">$12</span>
+                        </summary>
+                        <p>Six pieces. Slices of salmon placed on top of sushi rice.</p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Shrimp Nigiri (6)</span>
+                            <span class="price">$12</span>
+                        </summary>
+                        <p>Six pieces.</p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Salmon/Shrimp Nigiri (6)</span>
+                            <span class="price">$12.50</span>
+                        </summary>
+                        <p>Three salmon nigiri and three shrimp nigiri.</p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Single Salmon/Avocado Roll</span>
+                            <span class="price">$8</span>
+                        </summary>
+                        <p>Salmon and avocado.</p>
+                    </details>
+                </div>
+            </section>
+
+            <section class="menu-section" id="sides">
+                <div class="section-heading">
+                    <span class="section-number">04</span>
+                    <h2>Side Dishes</h2>
+                    <span class="section-note">Select a dish<br>for details</span>
+                </div>
+
+                <div class="dish-grid">
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Miso Soup</span>
+                            <span class="price">$2.50</span>
+                        </summary>
+                        <p>À la carte side dish.</p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Rice</span>
+                            <span class="price">$2.50</span>
+                        </summary>
+                        <p>À la carte side dish.</p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Egg Roll (2)</span>
+                            <span class="price">$6</span>
+                        </summary>
+                        <p>Two pieces.</p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Vegetable Egg Roll (2)</span>
+                            <span class="price">$6</span>
+                        </summary>
+                        <p>Two pieces.</p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Crab Rangoon (5)</span>
+                            <span class="price">$6.50</span>
+                        </summary>
+                        <p>Five pieces.</p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Gyoza (6)</span>
+                            <span class="price">$6.50</span>
+                        </summary>
+                        <p>Six pieces.</p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Curry Sauce</span>
+                            <span class="price">$3.50</span>
+                        </summary>
+                        <p>À la carte side sauce.</p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Katsuya Salad</span>
+                            <span class="price">$3.50</span>
+                        </summary>
+                        <p>House salad served with ginger dressing.</p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Seaweed Salad</span>
+                            <span class="price">$5.50</span>
+                        </summary>
+                        <p>À la carte side dish.</p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Takoyaki (6)</span>
+                            <span class="price">$6.50</span>
+                        </summary>
+                        <p>Six ball-shaped Japanese snacks made with wheat-based batter and filled with minced octopus.
+                        </p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">House Kimchi</span>
+                            <span class="price">$3</span>
+                        </summary>
+                        <p>À la carte side dish.</p>
+                    </details>
+
+                    <details class="dish">
+                        <summary>
+                            <span class="dish-name">Potato Korokke (2)</span>
+                            <span class="price">$6</span>
+                        </summary>
+                        <p>Two mashed potato croquettes coated with panko breadcrumbs and deep-fried.
+                            <em>Vegetarian.</em>
+                        </p>
+                    </details>
+                </div>
+            </section>
+
+            <figure class="interior-strip">
+                <img src="inside.jpg" alt="Inside Katsuya's dining area" loading="lazy">
+                <figcaption>
+                    <b>6301<br>Delmar Blvd</b>
+                    <p>St. Louis, MO 63130</p>
+                    <p>Sunday–Saturday<br>11am–8pm</p>
+                    <a href="tel:+13142963368">(314) 296-3368</a>
+                </figcaption>
+            </figure>
+
+        </main>
+
+        <footer>
+            <p>KATSUYA<br>Japanese Cutlets &amp; Sushi Rolls</p>
+            <a href="#top">Back to top ↑</a>
+        </footer>
+
+    </div>
+</body>
+
+</html>

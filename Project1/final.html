@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katsuya</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            background: #000;
+            color: #f7f2e8;
+            font-family: Georgia, "Times New Roman", serif;
+        }
+
+        .journey {
+            position: relative;
+            height: 200vh;
+            height: 200svh;
+            background: #000;
+        }
+
+        .logo-stage {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            height: 100vh;
+            height: 100svh;
+            overflow: hidden;
+            isolation: isolate;
+            pointer-events: none;
+        }
+
+        .homepage {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            background-image: url("homepage.png");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            filter: brightness(0.72) saturate(0.75);
+        }
+
+        .lid-cover {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            background: #000;
+            transform: translateY(100%);
+            will-change: transform;
+        }
+
+        .lid-cover::before {
+            content: "";
+            position: absolute;
+            bottom: calc(100% - 2px);
+            left: 0;
+            width: 100%;
+            height: clamp(120px, 18vw, 240px);
+
+            background-image:
+                linear-gradient(to bottom,
+                    transparent 45%,
+                    #000 100%),
+                url("wave.png");
+
+            background-size: 100% 100%, 100% auto;
+            background-position: center bottom;
+            background-repeat: no-repeat;
+
+            pointer-events: none;
+
+            -webkit-mask-image: linear-gradient(to bottom,
+                    transparent 0%,
+                    #000 45%);
+
+            mask-image: linear-gradient(to bottom,
+                    transparent 0%,
+                    #000 45%);
+
+            opacity: var(--wave-opacity, 0);
+        }
+
+        .logo {
+            position: absolute;
+            z-index: 2;
+            display: block;
+            max-width: none;
+            transform: translate(-50%, -50%);
+        }
+
+        .lid {
+            position: absolute;
+            top: 100vh;
+            top: 100svh;
+            left: 0;
+            z-index: 3;
+            width: 100%;
+            height: 100vh;
+            height: 100svh;
+            pointer-events: none;
+        }
+
+        .lid-caption {
+            position: absolute;
+            bottom: 36px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: max-content;
+            max-width: calc(100% - 120px);
+            margin: 0;
+            font-size: clamp(18px, 2.2vw, 28px);
+            font-weight: normal;
+            text-align: center;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 112px;
+            height: 100vh;
+            height: 100svh;
+            padding: 30px 8px 24px;
+            pointer-events: none;
+        }
+
+        .sidebar-name {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0;
+            gap: 3px;
+            color: #f7f2e8;
+            font-size: 21px;
+            line-height: 1.2;
+            text-decoration: none;
+            pointer-events: auto;
+        }
+
+        .sidebar-middle {
+            display: flex;
+            flex: 1;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 176px;
+        }
+
+        .sidebar-dots {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            pointer-events: auto;
+        }
+
+        .sidebar-dot {
+            display: grid;
+            place-items: center;
+            width: 44px;
+            height: 44px;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            text-decoration: none;
+        }
+
+        a.sidebar-dot {
+            cursor: pointer;
+        }
+
+        .sidebar-dot::before {
+            content: "";
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            background: #e8dfcf;
+            transition: background-color 200ms ease;
+        }
+
+        .sidebar-dot[aria-current="location"]::before {
+            background: #c63227;
+        }
+
+        .sidebar-dot:disabled {
+            opacity: 1;
+        }
+
+        .sidebar-name:focus-visible,
+        .sidebar-dot:focus-visible {
+            outline: 2px solid #f7f2e8;
+            outline-offset: 2px;
+        }
+
+        .sidebar-hours {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0;
+            gap: 6px;
+            margin-top: 20px;
+            font-size: 12px;
+            line-height: 1.4;
+            text-align: center;
+        }
+
+        .sidebar-hours span {
+            white-space: nowrap;
+        }
+
+        .sidebar-hours span:first-child {
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .sidebar {
+                width: 80px;
+            }
+
+            .sidebar-name {
+                font-size: 18px;
+            }
+
+            .sidebar-hours {
+                font-size: 11px;
+            }
+        }
+
+        @media (max-height: 600px) {
+            .sidebar {
+                padding-top: 16px;
+                padding-bottom: 16px;
+            }
+
+            .sidebar-name {
+                gap: 1px;
+                font-size: 16px;
+            }
+
+            .sidebar-hours {
+                margin-top: 12px;
+            }
+
+            .lid-caption {
+                bottom: 20px;
+            }
+        }
+
+        @media (max-height: 400px) {
+            .sidebar-name {
+                flex-direction: row;
+                gap: 0;
+                font-size: 11px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            .sidebar-dot::before {
+                transition: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <aside class="sidebar" aria-label="Page navigation">
+        <a class="sidebar-name" href="#home" aria-label="Katsuya home">
+            <span aria-hidden="true">K</span>
+            <span aria-hidden="true">A</span>
+            <span aria-hidden="true">T</span>
+            <span aria-hidden="true">S</span>
+            <span aria-hidden="true">U</span>
+            <span aria-hidden="true">Y</span>
+            <span aria-hidden="true">A</span>
+        </a>
+
+        <div class="sidebar-middle">
+            <nav class="sidebar-dots" aria-label="Page sections">
+                <a class="sidebar-dot" href="#home" aria-label="Home" aria-current="location"></a>
+
+                <a class="sidebar-dot" href="#lid" aria-label="Bento box lid"></a>
+
+                <button class="sidebar-dot" type="button" aria-label="Menu — coming next" disabled></button>
+
+                <button class="sidebar-dot" type="button" aria-label="Visit us — coming next" disabled></button>
+            </nav>
+        </div>
+
+        <div class="sidebar-hours">
+            <span>Open daily</span>
+            <span>11am–8pm</span>
+        </div>
+    </aside>
+
+    <main class="journey" id="home">
+        <div class="logo-stage">
+            <section class="homepage" aria-label="Katsuya restaurant"></section>
+
+            <div class="lid-cover" aria-hidden="true"></div>
+
+            <img class="logo" src="Logo.png" alt="Katsuya">
+        </div>
+
+        <section class="lid" id="lid" aria-labelledby="lid-title">
+            <h1 class="lid-caption" id="lid-title">
+                Open your bento box!
+            </h1>
+        </section>
+    </main>
+
+    <script>
+        const journey = document.querySelector(".journey");
+        const stage = document.querySelector(".logo-stage");
+        const logo = document.querySelector(".logo");
+        const lidCover = document.querySelector(".lid-cover");
+        const homeDot = document.querySelector(
+            'a.sidebar-dot[href="#home"]'
+        );
+        const lidDot = document.querySelector(
+            'a.sidebar-dot[href="#lid"]'
+        );
+
+        let frameRequested = false;
+
+        function updateScene() {
+            const width = stage.clientWidth;
+            const height = stage.clientHeight;
+
+            const photoWidth = 1366;
+            const photoHeight = 768;
+
+            const scale = Math.max(
+                width / photoWidth,
+                height / photoHeight
+            );
+
+            const offsetX = (width - photoWidth * scale) / 2;
+            const offsetY = (height - photoHeight * scale) / 2;
+
+            const startX = offsetX + 674 * scale;
+            const startY = offsetY + 384 * scale;
+
+            const progress = Math.min(
+                1,
+                Math.max(
+                    0,
+                    -journey.getBoundingClientRect().top / height
+                )
+            );
+
+            const settleProgress = Math.min(
+                1,
+                Math.max(0, (progress - 0.85) / 0.15)
+            );
+
+            const easedProgress =
+                settleProgress * settleProgress * (3 - 2 * settleProgress);
+
+            const centerX =
+                startX + (width / 2 - startX) * easedProgress;
+
+            const centerY =
+                startY + (height / 2 - startY) * easedProgress;
+
+
+            lidCover.style.transform =
+                `translateY(${(1 - progress) * 100}%)`;
+
+            const waveHeight = Math.sin(progress * Math.PI);
+
+            lidCover.style.setProperty("--wave-height", waveHeight);
+
+            logo.style.width = `${520 * scale}px`;
+            logo.style.left = `${centerX}px`;
+            logo.style.top = `${centerY}px`;
+
+            if (progress >= 0.5) {
+                homeDot.removeAttribute("aria-current");
+                lidDot.setAttribute("aria-current", "location");
+            } else {
+                lidDot.removeAttribute("aria-current");
+                homeDot.setAttribute("aria-current", "location");
+            }
+
+            lidCover.style.setProperty(
+                "--wave-opacity",
+                Math.min(1, progress / 0.12)
+            );
+
+            frameRequested = false;
+        }
+
+        function requestUpdate() {
+            if (!frameRequested) {
+                frameRequested = true;
+                requestAnimationFrame(updateScene);
+            }
+        }
+
+        window.addEventListener("scroll", requestUpdate, {
+            passive: true
+        });
+
+        new ResizeObserver(requestUpdate).observe(stage);
+
+        updateScene();
+
+        const waveHeight = Math.sin(progress * Math.PI);
+
+        lidCover.style.setProperty("--wave-height", waveHeight);
+    </script>
+</body>
+
+</html>
