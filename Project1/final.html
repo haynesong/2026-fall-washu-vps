@@ -3,12 +3,34 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Katsuya</title>
-
+    <link rel="icon" type="image/png" href="Logo.png">
+    <link rel="apple-touch-icon" href="Logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Newsreader:ital,wght@0,400;0,500;1,400&display=swap"
+        rel="stylesheet">
     <style>
+        :root {
+            --side-w: 112px;
+            --top-h: 0px;
+            --red: #d02b1c;
+            --lacquer: #7a1710;
+            --box-red: #8b1e16;
+            --paper: #ece6d8;
+            --cream: #f7f2e8;
+            --tan: #b79a6e;
+            --display: "Space Grotesk", "Helvetica Neue", Arial, sans-serif;
+            --serif: "Newsreader", Georgia, serif;
+            --sei-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='30' viewBox='0 0 60 30'%3E%3Cdefs%3E%3Cg id='s'%3E%3Ccircle r='30'/%3E%3Ccircle r='22' fill='none'/%3E%3Ccircle r='14' fill='none'/%3E%3Ccircle r='6' fill='none'/%3E%3C/g%3E%3C/defs%3E%3Cg fill='%23000' stroke='%23fff' stroke-opacity='.09'%3E%3Cuse href='%23s' x='30' y='-15'/%3E%3Cuse href='%23s' x='0' y='0'/%3E%3Cuse href='%23s' x='60' y='0'/%3E%3Cuse href='%23s' x='30' y='15'/%3E%3Cuse href='%23s' x='0' y='30'/%3E%3Cuse href='%23s' x='60' y='30'/%3E%3Cuse href='%23s' x='30' y='45'/%3E%3C/g%3E%3C/svg%3E");
+            --sei-tan: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='30' viewBox='0 0 60 30'%3E%3Cdefs%3E%3Cg id='s'%3E%3Ccircle r='30'/%3E%3Ccircle r='22' fill='none'/%3E%3Ccircle r='14' fill='none'/%3E%3Ccircle r='6' fill='none'/%3E%3C/g%3E%3C/defs%3E%3Cg fill='%23b79a6e' stroke='%23274034' stroke-opacity='.38'%3E%3Cuse href='%23s' x='30' y='-15'/%3E%3Cuse href='%23s' x='0' y='0'/%3E%3Cuse href='%23s' x='60' y='0'/%3E%3Cuse href='%23s' x='30' y='15'/%3E%3Cuse href='%23s' x='0' y='30'/%3E%3Cuse href='%23s' x='60' y='30'/%3E%3Cuse href='%23s' x='30' y='45'/%3E%3C/g%3E%3C/svg%3E");
+        }
+
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         html {
@@ -16,257 +38,992 @@
         }
 
         body {
-            margin: 0;
+            overflow-x: clip;
             background: #000;
-            color: #f7f2e8;
-            font-family: Georgia, "Times New Roman", serif;
+            color: var(--cream);
+            font-family: var(--serif);
+        }
+
+        .dock {
+            position: fixed;
+            left: 24px;
+            top: 20px;
+            width: 64px;
+            height: 64px;
+            pointer-events: none;
+        }
+
+        .nav {
+            position: fixed;
+            left: 28px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 30;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .nav a {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 9px 4px;
+            color: var(--cream);
+            text-decoration: none;
+            font-size: .95rem;
+            letter-spacing: .03em;
+            text-shadow: 0 1px 10px rgba(0, 0, 0, .85);
+            transition: color .25s;
+        }
+
+        .nav i {
+            flex: none;
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            background: #e8dfcf;
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, .25);
+            transition: background .25s, transform .25s;
+        }
+
+        .nav span {
+            opacity: .8;
+            transition: opacity .25s, transform .25s;
+        }
+
+        .nav a:hover span,
+        .nav a.active span {
+            opacity: 1;
+            transform: translateX(3px);
+        }
+
+        .nav a.active {
+            color: var(--red);
+        }
+
+        .nav a.active i {
+            background: var(--red);
+            transform: scale(1.3);
+        }
+
+        .nav a:focus-visible {
+            outline: 2px solid var(--cream);
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+
+        .hours {
+            position: fixed;
+            left: 28px;
+            bottom: 28px;
+            z-index: 30;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: .78rem;
+            line-height: 1.4;
+            text-shadow: 0 1px 10px rgba(0, 0, 0, .85);
+        }
+
+        .hours span:first-child {
+            font-size: .66rem;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            opacity: .8;
+        }
+
+        .prog {
+            position: fixed;
+            right: 26px;
+            top: 50%;
+            width: 2px;
+            height: 28svh;
+            transform: translateY(-50%);
+            background: rgba(247, 242, 232, .2);
+            z-index: 30;
+            pointer-events: none;
+        }
+
+        .prog i {
+            position: absolute;
+            inset: 0;
+            background: var(--red);
+            transform-origin: top;
+            transform: scaleY(0);
+        }
+
+        body.light .nav a,
+        body.light .hours {
+            color: #120d08;
+            text-shadow: none;
+        }
+
+        body.light .nav a.active {
+            color: #7a1710;
+        }
+
+        body.light .nav i {
+            background: #120d08;
+            box-shadow: none;
+        }
+
+        body.light .nav a.active i {
+            background: #7a1710;
+        }
+
+        body.light .prog {
+            background: rgba(0, 0, 0, .2);
+        }
+
+        .logo {
+            position: fixed;
+            z-index: 40;
+            display: block;
+            max-width: none;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
         }
 
         .journey {
             position: relative;
-            height: 200vh;
-            height: 200svh;
+            z-index: 2;
+            height: 300svh;
             background: #000;
         }
 
-        .logo-stage {
+        .stage {
             position: sticky;
             top: 0;
-            z-index: 2;
-            height: 100vh;
             height: 100svh;
             overflow: hidden;
-            isolation: isolate;
-            pointer-events: none;
+            background: #000;
         }
 
-        .homepage {
+        .lip {
             position: absolute;
-            inset: 0;
-            z-index: 0;
-            background-image: url("homepage.png");
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            filter: brightness(0.72) saturate(0.75);
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 12px;
+            background: var(--red);
+            z-index: 5;
+            box-shadow: 0 30px 50px rgba(0, 0, 0, .8);
         }
 
-        .lid-cover {
+        .photo-wrap {
+            position: absolute;
+            top: var(--top-h);
+            bottom: 0;
+            left: 0;
+            right: 0;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .photo-wrap img {
             position: absolute;
             inset: 0;
-            z-index: 1;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+            will-change: transform;
+        }
+
+        .cover {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
             background: #000;
             transform: translateY(100%);
             will-change: transform;
         }
 
-        .lid-cover::before {
+        .cover::before {
             content: "";
             position: absolute;
             bottom: calc(100% - 2px);
             left: 0;
             width: 100%;
             height: clamp(120px, 18vw, 240px);
-
-            background-image:
-                linear-gradient(to bottom,
-                    transparent 45%,
-                    #000 100%),
-                url("wave.png");
-
+            background-image: linear-gradient(to bottom, transparent 45%, #000 100%), url("wave.png");
             background-size: 100% 100%, 100% auto;
             background-position: center bottom;
             background-repeat: no-repeat;
-
             pointer-events: none;
-
-            -webkit-mask-image: linear-gradient(to bottom,
-                    transparent 0%,
-                    #000 45%);
-
-            mask-image: linear-gradient(to bottom,
-                    transparent 0%,
-                    #000 45%);
-
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 45%);
+            mask-image: linear-gradient(to bottom, transparent 0%, #000 45%);
             opacity: var(--wave-opacity, 0);
         }
 
-        .logo {
+        .cover::after {
+            content: "";
             position: absolute;
-            z-index: 2;
-            display: block;
-            max-width: none;
-            transform: translate(-50%, -50%);
+            inset: 0;
+            background: var(--sei-dark);
+            background-size: 60px 30px;
+            opacity: .8;
         }
 
-        .lid {
+        @keyframes bob {
+
+            0%,
+            100% {
+                transform: translate(-50%, 0);
+            }
+
+            50% {
+                transform: translate(-50%, 8px);
+            }
+        }
+
+        .caption {
             position: absolute;
-            top: 100vh;
-            top: 100svh;
             left: 0;
-            z-index: 3;
-            width: 100%;
-            height: 100vh;
-            height: 100svh;
-            pointer-events: none;
-        }
-
-        .lid-caption {
-            position: absolute;
-            bottom: 36px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: max-content;
-            max-width: calc(100% - 120px);
-            margin: 0;
-            font-size: clamp(18px, 2.2vw, 28px);
-            font-weight: normal;
+            right: 0;
             text-align: center;
+            font-size: clamp(18px, 2.2vw, 28px);
+            font-weight: 400;
+            opacity: 0;
+            z-index: 4;
         }
 
-        .sidebar {
-            position: fixed;
+        .main-pad {
+            padding-left: var(--side-w);
+            padding-right: var(--side-w);
+        }
+
+        .sea {
+            position: relative;
+        }
+
+        .sea::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            background: var(--sei-dark);
+            background-size: 60px 30px;
+        }
+
+        .bento-track {
+            position: relative;
+            z-index: 1;
+            margin-top: calc(-1 * 100svh);
+            min-height: 100svh;
+            background: #000;
+        }
+
+        .bento-stage {
+            position: sticky;
             top: 0;
-            left: 0;
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 112px;
-            height: 100vh;
             height: 100svh;
-            padding: 30px 8px 24px;
-            pointer-events: none;
-        }
-
-        .sidebar-name {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            flex-shrink: 0;
-            gap: 3px;
-            color: #f7f2e8;
-            font-size: 21px;
-            line-height: 1.2;
-            text-decoration: none;
-            pointer-events: auto;
-        }
-
-        .sidebar-middle {
-            display: flex;
-            flex: 1;
             align-items: center;
             justify-content: center;
-            width: 100%;
-            min-height: 176px;
+            padding: 0 1.5rem;
         }
 
-        .sidebar-dots {
+        .bento-box {
+            width: min(1040px, 100%);
+            height: min(80svh, 660px);
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 12px;
+            padding: 12px;
+            background: var(--box-red);
+            border-radius: 14px;
+            outline: 2px solid #000;
+        }
+
+        .col {
             display: flex;
             flex-direction: column;
+            gap: 12px;
+            min-height: 0;
+        }
+
+        .compartment {
+            position: relative;
+            border-radius: 8px;
+            background: #151515;
+            min-height: 0;
+        }
+
+        .compartment.shot {
+            flex: 1;
+            overflow: hidden;
+            background: #1c1c1c;
+        }
+
+        .slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity .6s ease;
+            display: flex;
             align-items: center;
-            pointer-events: auto;
+            justify-content: center;
+            color: #777;
+            font-size: .8rem;
+            text-align: center;
+            padding: .5rem;
         }
 
-        .sidebar-dot {
-            display: grid;
-            place-items: center;
-            width: 44px;
-            height: 44px;
-            padding: 0;
-            border: 0;
-            background: transparent;
-            text-decoration: none;
-        }
-
-        a.sidebar-dot {
-            cursor: pointer;
-        }
-
-        .sidebar-dot::before {
-            content: "";
-            width: 11px;
-            height: 11px;
-            border-radius: 50%;
-            background: #e8dfcf;
-            transition: background-color 200ms ease;
-        }
-
-        .sidebar-dot[aria-current="location"]::before {
-            background: #c63227;
-        }
-
-        .sidebar-dot:disabled {
+        .slide.on {
             opacity: 1;
         }
 
-        .sidebar-name:focus-visible,
-        .sidebar-dot:focus-visible {
-            outline: 2px solid #f7f2e8;
+        .slide img,
+        .slide video {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .compartment.top {
+            flex: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 12px;
+        }
+
+        .compartment.items {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 6px 14px;
+            background: var(--paper);
+        }
+
+        .tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .tab {
+            background: transparent;
+            color: var(--cream);
+            border: 1px solid rgba(247, 242, 232, .28);
+            border-radius: 6px;
+            height: 44px;
+            font: inherit;
+            font-size: .95rem;
+            letter-spacing: .04em;
+            cursor: pointer;
+            transition: background .2s, color .2s, border-color .2s;
+        }
+
+        .tab:hover {
+            border-color: rgba(247, 242, 232, .65);
+        }
+
+        .tab[aria-selected="true"] {
+            background: var(--cream);
+            color: #1a1a1a;
+            border-color: var(--cream);
+        }
+
+        .tab:focus-visible {
+            outline: 2px solid var(--cream);
             outline-offset: 2px;
         }
 
-        .sidebar-hours {
+        .included {
+            padding: .8rem .2rem 0;
+            border-top: 1px solid rgba(247, 242, 232, .16);
+            font-size: .8rem;
+            line-height: 1.5;
+            color: #cfc7b8;
+            height: 6em;
+            overflow: hidden;
+        }
+
+        .listwrap {
+            position: relative;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .list {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            padding-right: 14px;
             display: flex;
             flex-direction: column;
+            visibility: hidden;
+        }
+
+        .list.on {
+            visibility: visible;
+        }
+
+        .rail {
+            position: absolute;
+            top: 6px;
+            right: 0;
+            bottom: 6px;
+            width: 3px;
+            border-radius: 2px;
+            background: rgba(0, 0, 0, .1);
+            z-index: 1;
+        }
+
+        .rail i {
+            position: absolute;
+            left: 0;
+            right: 0;
+            border-radius: 2px;
+            background: var(--lacquer);
+        }
+
+        .slot {
+            perspective: 1000px;
+            flex: none;
+            height: 68px;
+            background: none;
+            border: 0;
+            padding: 0;
+            cursor: pointer;
+            color: #1a1a1a;
+            font: inherit;
+            text-align: left;
+        }
+
+        .slot.plain {
+            cursor: default;
+        }
+
+        .slot:focus-visible {
+            outline: 2px solid var(--lacquer);
+            outline-offset: -2px;
+        }
+
+        .slot-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform .7s cubic-bezier(.4, .2, .2, 1);
+        }
+
+        .slot.flipped .slot-inner {
+            transform: rotateX(180deg);
+        }
+
+        .face {
+            position: absolute;
+            inset: 0;
+            background: var(--paper);
+            border-bottom: 1px solid rgba(0, 0, 0, .16);
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            display: flex;
             align-items: center;
-            flex-shrink: 0;
-            gap: 6px;
-            margin-top: 20px;
-            font-size: 12px;
-            line-height: 1.4;
-            text-align: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 0 .3rem;
         }
 
-        .sidebar-hours span {
+        .face.back {
+            transform: rotateX(180deg);
+            background: #e2d9c6;
+        }
+
+        .name {
+            font-size: 1.05rem;
+            letter-spacing: .02em;
+            transition: color .2s, transform .25s;
+        }
+
+        .slot:not(.plain):hover .name {
+            color: var(--lacquer);
+            transform: translateX(5px);
+        }
+
+        .price {
+            font-weight: 500;
             white-space: nowrap;
+            color: var(--lacquer);
         }
 
-        .sidebar-hours span:first-child {
-            font-size: 10px;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
+        .desc {
+            font-size: .84rem;
+            line-height: 1.4;
         }
 
-        @media (max-width: 600px) {
-            .sidebar {
-                width: 80px;
-            }
-
-            .sidebar-name {
-                font-size: 18px;
-            }
-
-            .sidebar-hours {
-                font-size: 11px;
-            }
+        .desc em {
+            color: var(--lacquer);
         }
 
-        @media (max-height: 600px) {
-            .sidebar {
-                padding-top: 16px;
-                padding-bottom: 16px;
-            }
 
-            .sidebar-name {
-                gap: 1px;
-                font-size: 16px;
-            }
 
-            .sidebar-hours {
-                margin-top: 12px;
-            }
 
-            .lid-caption {
-                bottom: 20px;
-            }
+
+
+
+        .display {
+            font-family: var(--display);
+            font-weight: 400;
+            font-size: clamp(2.6rem, 5.4vw, 5rem);
+            line-height: 1.08;
+            letter-spacing: -.015em;
         }
 
-        @media (max-height: 400px) {
-            .sidebar-name {
+        .display.sm {
+            font-size: clamp(2.2rem, 4.4vw, 3.9rem);
+        }
+
+        .lines .ln {
+            display: block;
+            overflow: hidden;
+            padding-bottom: .1em;
+        }
+
+        .lines .ln>span {
+            display: inline-block;
+            transform: translateY(112%);
+            transition: transform 1s cubic-bezier(.2, .7, .1, 1) var(--d, 0s);
+        }
+
+        .lines.in .ln>span {
+            transform: none;
+        }
+
+        .rv {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity .9s ease var(--d, 0s), transform .9s cubic-bezier(.2, .7, .1, 1) var(--d, 0s);
+        }
+
+        .rv.in {
+            opacity: 1;
+            transform: none;
+        }
+
+        .rv-clip {
+            opacity: 0;
+            transform: translateY(110px);
+            transition: opacity 1s ease var(--d, 0s), transform 1.3s cubic-bezier(.2, .7, .1, 1) var(--d, 0s);
+        }
+
+        .rv-clip.in {
+            opacity: 1;
+            transform: none;
+        }
+
+        .rv-clip img,
+        .rv-clip video {
+            transform: scale(1.18);
+            transition: transform 1.6s cubic-bezier(.2, .7, .1, 1) var(--d, 0s);
+        }
+
+        .rv-clip.in img,
+        .rv-clip.in video {
+            transform: scale(1);
+        }
+
+        .frame {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            background: #1c1c1c;
+            height: 400px;
+        }
+
+        .frame img,
+        .frame video {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .about {
+            min-height: 100svh;
+            padding-top: 9rem;
+            padding-bottom: 9rem;
+            overflow: hidden;
+        }
+
+        .about-grid {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1fr 1.05fr;
+            gap: 4rem;
+            align-items: center;
+            width: min(1080px, 100%);
+            margin: 0 auto;
+        }
+
+        .about-copy .display {
+            margin-bottom: 2.5rem;
+        }
+
+        .collage {
+            position: relative;
+            height: clamp(460px, 64svh, 640px);
+        }
+
+        .c-video {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 76%;
+            height: 80%;
+            transform: translate3d(0, var(--py, 0px), 0);
+        }
+
+        .c-video .frame {
+            height: 100%;
+        }
+
+        .c-video .cap {
+            position: absolute;
+            left: 1rem;
+            bottom: 1rem;
+            z-index: 3;
+            font-style: italic;
+            font-size: .95rem;
+            text-shadow: 0 1px 8px rgba(0, 0, 0, .8);
+        }
+
+        .badge {
+            position: absolute;
+            left: -64px;
+            top: -40px;
+            width: 150px;
+            z-index: 4;
+        }
+
+        .sym {
+            position: fixed;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0;
+            max-width: none;
+        }
+
+        .badge .spin,
+        .sym .spin {
+            transform-box: fill-box;
+            transform-origin: center;
+            transform: rotate(var(--rot, 0deg));
+        }
+
+        .c-owners {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 54%;
+            z-index: 3;
+            transform: translate3d(0, var(--py, 0px), 0) rotate(-3deg);
+        }
+
+        .polaroid {
+            background: #f4efe6;
+            padding: 10px 10px 0;
+            box-shadow: 0 24px 40px rgba(0, 0, 0, .55);
+        }
+
+        .polaroid .frame {
+            height: clamp(150px, 22svh, 230px);
+            border-radius: 2px;
+        }
+
+        .polaroid figcaption {
+            color: #1a1a1a;
+            font-style: italic;
+            font-size: .82rem;
+            line-height: 1.35;
+            padding: .7rem .2rem .9rem;
+        }
+
+        .pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .pills a {
+            color: var(--cream);
+            text-decoration: none;
+            border: 1px solid rgba(247, 242, 232, .4);
+            border-radius: 6px;
+            padding: .75rem 1.4rem;
+            font-size: .95rem;
+            letter-spacing: .03em;
+            transition: background .2s, color .2s, border-color .2s;
+        }
+
+        .pills a:hover,
+        .pills a:focus-visible {
+            background: var(--cream);
+            color: #1a1a1a;
+            border-color: var(--cream);
+            outline: none;
+        }
+
+        .visit {
+            color: var(--cream);
+            padding-top: 9rem;
+            padding-bottom: 7rem;
+            overflow: clip;
+        }
+
+        .visit .display {
+            margin-bottom: 3rem;
+        }
+
+        .loc-stack {
+            position: relative;
+            height: 600svh;
+        }
+
+        .loc-stage {
+            position: sticky;
+            top: 0;
+            height: 100svh;
+            display: grid;
+            place-items: center;
+            padding: 0 1.5rem;
+        }
+
+        .tray {
+            width: min(1000px, 100%);
+            height: min(84svh, 640px);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1.15fr 1fr;
+            gap: 12px;
+        }
+
+        .cell {
+            min-height: 0;
+            padding: 10px;
+            background: var(--box-red);
+            border-radius: 12px;
+            outline: 2px solid #000;
+            will-change: transform;
+            transform: translateY(110vh);
+        }
+
+        .cell:nth-child(3) {
+            grid-column: 1 / -1;
+        }
+
+        .card {
+            position: relative;
+            height: 100%;
+            border-radius: 6px;
+            overflow: hidden;
+            background: #151515;
+        }
+
+        .card .frame {
+            height: 100%;
+            border-radius: 0;
+        }
+
+        .card iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            display: block;
+        }
+
+        .v-info {
+            width: min(1080px, 100%);
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem 4rem;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding-top: 2rem;
+            border-top: 2px solid rgba(247, 242, 232, .5);
+        }
+
+        .v-info address {
+            font-style: normal;
+            font-family: var(--display);
+            font-size: clamp(1.4rem, 2.6vw, 2.1rem);
+            line-height: 1.25;
+        }
+
+        .hrs small {
+            display: block;
+            font-style: italic;
+            font-size: .95rem;
+            margin-bottom: .3rem;
+        }
+
+        .hrs b {
+            font-family: var(--display);
+            font-weight: 400;
+            font-size: clamp(1.6rem, 3vw, 2.6rem);
+        }
+
+        .about {
+            color: #120d08;
+        }
+
+        .about::before {
+            background: var(--sei-tan);
+            background-size: 60px 30px;
+        }
+
+        .about .display {
+            color: #0b0b0b;
+        }
+
+        .about .pills a {
+            color: #0b0b0b;
+            border-color: rgba(0, 0, 0, .7);
+        }
+
+        .about .pills a:hover,
+        .about .pills a:focus-visible {
+            background: #0b0b0b;
+            color: var(--tan);
+            border-color: #0b0b0b;
+        }
+
+        .foot {
+            position: relative;
+            min-height: 60svh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding-top: 4rem;
+        }
+
+        .foot-top {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 1rem;
+            width: min(1080px, 100%);
+            margin: 0 auto 3rem;
+            color: #999;
+            font-size: .9rem;
+        }
+
+        .wordmark {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: clamp(44px, 11.5vw, 168px);
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: -.01em;
+            text-align: center;
+            color: var(--cream);
+            white-space: nowrap;
+            margin-bottom: 5svh;
+            user-select: none;
+        }
+
+        @media (max-width: 800px) {
+            :root {
+                --side-w: 0px;
+            }
+
+            .nav {
+                left: 8px;
+            }
+
+            .nav a span {
+                display: none;
+            }
+
+            .nav a {
+                padding: 12px 8px;
+            }
+
+            .dock {
+                left: 14px;
+                top: 14px;
+                width: 48px;
+                height: 48px;
+            }
+
+            .hours,
+            .prog {
+                display: none;
+            }
+
+            .bento-stage {
+                padding: 72px 1rem 1rem;
+                align-items: stretch;
+            }
+
+            .bento-box {
+                grid-template-columns: 1fr;
+                grid-template-rows: 90px 1fr;
+                height: 100%;
+            }
+
+            .col.left {
                 flex-direction: row;
-                gap: 0;
-                font-size: 11px;
+            }
+
+            .tab {
+                height: 38px;
+                font-size: .8rem;
+            }
+
+            .included {
+                font-size: .7rem;
+                height: 5em;
+            }
+
+            .main-pad {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+            .about,
+            .visit {
+                padding-top: 7rem;
+                padding-bottom: 5rem;
+            }
+
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .tray {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr 1fr 1fr;
+                gap: 8px;
+            }
+
+            .badge {
+                left: -8px;
+                top: -44px;
+                width: 110px;
+            }
+
+            .lip {
+                left: 0;
+                right: 0;
+            }
+
+            .foot-top {
+                flex-direction: column;
+                align-items: flex-start;
             }
         }
 
@@ -275,159 +1032,1136 @@
                 scroll-behavior: auto;
             }
 
-            .sidebar-dot::before {
+            .slot-inner,
+            .slide {
                 transition: none;
             }
+
+            .lines .ln>span,
+            .rv,
+            .rv-clip,
+            .rv-clip img,
+            .rv-clip video {
+                transition: none;
+                transform: none;
+                opacity: 1;
+                clip-path: none;
+            }
         }
-    </style>
+
+        #loader {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: #000;
+            transition: opacity .6s ease, visibility .6s;
+        }
+
+        #loader .mark {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            width: min(60vmin, 420px);
+            transform: translate(-50%, -50%);
+            transition: left 1s cubic-bezier(.6, 0, .2, 1), top 1s cubic-bezier(.6, 0, .2, 1), width 1s cubic-bezier(.6, 0, .2, 1);
+        }
+
+        #loader img {
+            width: 100%;
+            display: block;
+            animation: loadspin 1.4s linear infinite;
+        }
+
+        #loader.done {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        body.loading {
+            overflow: hidden;
+        }
+
+        @keyframes loadspin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        body {
+            line-height: 1.55;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+            font-kerning: normal;
+        }
+
+        .display {
+            line-height: 1.04;
+            letter-spacing: -.025em;
+            text-wrap: balance;
+        }
+
+        .display.sm {
+            letter-spacing: -.02em;
+        }
+
+
+        .wordmark {
+            font-family: var(--display);
+            font-weight: 400;
+            letter-spacing: .06em;
+            line-height: .95;
+        }
+
+        .name {
+            font-size: 1.08rem;
+            letter-spacing: .005em;
+        }
+
+        .price {
+            font-variant-numeric: lining-nums tabular-nums;
+            letter-spacing: .02em;
+        }
+
+        .desc {
+            font-size: .86rem;
+            line-height: 1.5;
+            text-wrap: pretty;
+        }
+
+        .included {
+            line-height: 1.6;
+            text-wrap: pretty;
+        }
+
+        .tab,
+        .pills a {
+            font-size: .78rem;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+        }
+
+        .nav a {
+            letter-spacing: .04em;
+        }
+
+        .v-info address {
+            line-height: 1.3;
+            letter-spacing: -.005em;
+        }
+
+        .hrs b {
+            letter-spacing: -.01em;
+        }
+
+        .polaroid figcaption,
+        .c-video .cap {
+            line-height: 1.4;
+        }
+        .nav a.active {
+            color: #ff6b5a;
+        }
+
+        .nav a.active i {
+            background: #ff6b5a;
+        }
+
+        body.light .nav a.active {
+            color: #4d0f0a;
+        }
+
+        body.light .nav a.active i {
+            background: #4d0f0a;
+        }
+
+        .frame video,
+        .slide video {
+            transform: scale(1.35);
+        }
+
+        .rv-clip video {
+            transform: scale(1.55);
+        }
+
+        .rv-clip.in video {
+            transform: scale(1.35);
+        }
+        .where {
+            position: fixed;
+            left: 28px;
+            bottom: 84px;
+            z-index: 30;
+            font-size: .72rem;
+            line-height: 1.4;
+            text-shadow: 0 1px 10px rgba(0, 0, 0, .85);
+        }
+
+        body.light .where {
+            color: #120d08;
+            text-shadow: none;
+        }
+
+        .hours.big span:first-child {
+            text-transform: none;
+            font-style: italic;
+        }
+
+        .hrs b {
+            display: block;
+        }
+
+        .v-info:not(.landed) address,
+        .v-info:not(.landed) .hrs {
+            visibility: hidden;
+        }
+
+        @media (max-width: 800px) {
+            .where {
+                display: none;
+            }
+        }
+
+
+        .display {
+            font-weight: 700;
+            letter-spacing: -.02em;
+            line-height: 1.08;
+        }
+
+        .display.sm {
+            letter-spacing: -.02em;
+        }
+
+        .wordmark {
+            font-weight: 700;
+            letter-spacing: .02em;
+        }
+
+        .v-info address,
+        .hrs b {
+            font-weight: 600;
+        }
+
+        .tab,
+        .pills a {
+            font-family: var(--display);
+            font-weight: 600;
+            font-size: .72rem;
+            letter-spacing: .1em;
+        }
+
+        .where.big,
+        .hours.big span:last-child {
+            font-family: var(--display);
+            font-weight: 600;
+        }
+
+
+
+
+
+        .lid {
+            position: absolute;
+            z-index: 3;
+            left: calc(-1 * var(--side-w));
+            right: calc(-1 * var(--side-w));
+            top: 0;
+            height: 100%;
+            background-color: #000;
+            background-image: var(--sei-dark);
+            background-size: 60px 30px;
+            pointer-events: none;
+            will-change: transform;
+            transform: translateY(-100%);
+        }
+
+        .lid div {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            place-items: center;
+            padding: 1.5rem;
+        }
+
+        .lid p {
+            max-width: 780px;
+            text-align: center;
+            font-family: var(--display);
+            font-weight: 700;
+            font-size: clamp(2rem, 5.4vw, 4.6rem);
+            line-height: 1.12;
+            letter-spacing: -.02em;
+        }
+        .nav a {
+            font-family: var(--display);
+            font-size: 1rem;
+            font-weight: 500;
+            letter-spacing: .02em;
+            color: #fff;
+            text-shadow: 0 0 6px #000, 0 1px 3px #000;
+        }
+
+        .nav span {
+            opacity: 1;
+        }
+
+        .nav i {
+            width: 12px;
+            height: 12px;
+            background: #fff;
+        }
+
+        .nav a.active {
+            font-weight: 600;
+            color: #ff8a7a;
+        }
+
+        .nav a.active i {
+            background: #ff8a7a;
+        }
+
+        .hours,
+        .where {
+            font-family: var(--display);
+            font-weight: 500;
+            color: #fff;
+            text-shadow: 0 0 6px #000, 0 1px 3px #000;
+        }
+
+        .hours span:first-child {
+            font-weight: 600;
+            opacity: 1;
+        }
+
+        .prog {
+            background: rgba(255, 255, 255, .35);
+        }
+
+        body.light .nav a,
+        body.light .hours,
+        body.light .where {
+            color: #000;
+            text-shadow: none;
+        }
+
+        body.light .nav i {
+            background: #000;
+        }
+
+        body.light .nav a.active {
+            color: #3a0a06;
+        }
+
+        body.light .nav a.active i {
+            background: #3a0a06;
+        }
+
+        body.light .prog {
+            background: rgba(0, 0, 0, .35);
+        }
+    
+.nav a.active { color: #fff; font-weight: 700; text-shadow: 0 1px 3px #000; }
+.nav a.active i { background: #ff3b24; box-shadow: 0 0 0 3px #fff; }
+.nav a:not(.active) { opacity: .6; }
+body.light .nav a.active { color: #000; font-weight: 700; text-shadow: none; }
+body.light .nav a.active i { background: #d02b1c; box-shadow: 0 0 0 3px #000; }
+body.light .nav a:not(.active) { opacity: .55; }
+
+@media (min-width: 801px) {
+    .about.main-pad, .visit.main-pad { padding-left: 170px; padding-right: 170px; }
+}
+</style>
 </head>
 
-<body>
-    <aside class="sidebar" aria-label="Page navigation">
-        <a class="sidebar-name" href="#home" aria-label="Katsuya home">
-            <span aria-hidden="true">K</span>
-            <span aria-hidden="true">A</span>
-            <span aria-hidden="true">T</span>
-            <span aria-hidden="true">S</span>
-            <span aria-hidden="true">U</span>
-            <span aria-hidden="true">Y</span>
-            <span aria-hidden="true">A</span>
-        </a>
+<body class="loading">
+    <div id="loader">
+        <div class="mark"><img src="Logo.png" alt=""></div>
+    </div>
 
-        <div class="sidebar-middle">
-            <nav class="sidebar-dots" aria-label="Page sections">
-                <a class="sidebar-dot" href="#home" aria-label="Home" aria-current="location"></a>
+    <div class="dock" id="dock" aria-hidden="true"></div>
+    <nav class="nav" aria-label="Page sections">
+        <a href="#home" data-go="home"><i></i><span>Home</span></a>
+        <a href="#lid" data-go="lid"><i></i><span>Menu</span></a>
+        <a href="#about" data-go="about"><i></i><span>About Us</span></a>
+        <a href="#location" data-go="location"><i></i><span>Location</span></a>
+    </nav>
+    <div class="where" id="whereFix">6301 Delmar Blvd<br>St. Louis, MO 63130</div>
+    <div class="hours" id="hoursFix"><span>Open daily</span><span>11am–8pm</span></div>
+    <div class="prog" aria-hidden="true"><i id="prog"></i></div>
 
-                <a class="sidebar-dot" href="#lid" aria-label="Bento box lid"></a>
+    <img class="logo" id="logo" alt="Katsuya">
+    <svg class="sym" id="bgsym" viewBox="0 0 160 160" aria-hidden="true">
+        <defs>
+            <clipPath id="disc2">
+                <circle cx="80" cy="80" r="76" />
+            </clipPath>
+        </defs>
+        <g class="spin">
+            <circle cx="80" cy="80" r="78" fill="#000" />
+            <circle cx="80" cy="80" r="62" fill="#d02b1c" />
+            <g clip-path="url(#disc2)" stroke="#000" stroke-width="7">
+                <g transform="rotate(-35 80 80)">
+                    <line x1="10" y1="56" x2="150" y2="56" />
+                    <line x1="10" y1="80" x2="150" y2="80" />
+                    <line x1="10" y1="104" x2="150" y2="104" />
+                </g>
+            </g>
+        </g>
+    </svg>
 
-                <button class="sidebar-dot" type="button" aria-label="Menu — coming next" disabled></button>
-
-                <button class="sidebar-dot" type="button" aria-label="Visit us — coming next" disabled></button>
-            </nav>
+    <main>
+        <div class="journey" id="home">
+            <div class="stage" id="stage">
+                <div class="photo-wrap" id="wrap">
+                    <img id="photo" alt="">
+                </div>
+                <div class="cover" id="cover" aria-hidden="true"></div>
+                <p class="caption" id="caption">Open your bento box!</p>
+            </div>
+            <div class="lip" aria-hidden="true"></div>
         </div>
 
-        <div class="sidebar-hours">
-            <span>Open daily</span>
-            <span>11am–8pm</span>
-        </div>
-    </aside>
+        <section class="bento-track main-pad sea" id="bento" aria-label="Menu">
+            <div class="bento-stage">
+                <div class="bento-box" id="box">
+                    <div class="col left" id="shots"></div>
+                    <div class="col right">
+                        <div class="compartment top">
+                            <div class="tabs" id="tabs" role="tablist" aria-label="Menu sections"></div>
+                            <p class="included" id="included"></p>
+                        </div>
+                        <div class="compartment items">
+                            <div class="listwrap" id="listwrap">
+                                <div class="rail" aria-hidden="true"><i id="thumb"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="lid" id="lid" aria-hidden="true"><div><p>Looking forward to hosting you soon!</p></div></div>
+            </div>
+        </section>
 
-    <main class="journey" id="home">
-        <div class="logo-stage">
-            <section class="homepage" aria-label="Katsuya restaurant"></section>
 
-            <div class="lid-cover" aria-hidden="true"></div>
+        <section class="about main-pad sea" id="about">
+            <div class="about-grid">
+                <div class="about-copy">
+                    <h2 class="display sm lines">
+                        <span class="ln"><span>We use the best</span></span>
+                        <span class="ln"><span style="--d:.12s">ingredients and provide</span></span>
+                        <span class="ln"><span style="--d:.24s">a great atmosphere.</span></span>
+                    </h2>
+                    <div class="pills rv" style="--d:.3s">
+                        <a href="https://www.yelp.com/biz/katsuya-stl-university-city" target="_blank"
+                            rel="noopener">Katsuya on Yelp</a>
+                        <a href="https://www.instagram.com/katsuyastl/" target="_blank" rel="noopener">@katsuyastl on
+                            Instagram</a>
+                    </div>
+                </div>
+                <div class="collage">
+                    <div class="c-video" data-par="0.06">
+                        <div class="frame rv-clip" data-media="bts.mov" data-alt="Making panko"></div>
+                        <p class="cap">Making fresh panko</p>
+                        <svg class="badge" viewBox="0 0 160 160" aria-hidden="true">
+                            <defs>
+                                <clipPath id="disc">
+                                    <circle cx="80" cy="80" r="76" />
+                                </clipPath>
+                            </defs>
+                            <g class="spin">
+                                <circle cx="80" cy="80" r="78" fill="#000" />
+                                <circle cx="80" cy="80" r="62" fill="#d02b1c" />
+                                <g clip-path="url(#disc)" stroke="#000" stroke-width="7">
+                                    <g transform="rotate(-35 80 80)">
+                                        <line x1="10" y1="56" x2="150" y2="56" />
+                                        <line x1="10" y1="80" x2="150" y2="80" />
+                                        <line x1="10" y1="104" x2="150" y2="104" />
+                                    </g>
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+                    <figure class="c-owners" data-par="-0.08">
+                        <div class="polaroid rv" style="--d:.2s">
+                            <div class="frame rv-clip" data-media="owners.jpg" data-alt="Jack Li and Dae “Teddy” Lee">
+                            </div>
+                            <figcaption>Co-owners Jack Li and Dae “Teddy” Lee</figcaption>
+                        </div>
+                    </figure>
+                </div>
+            </div>
+        </section>
 
-            <img class="logo" src="Logo.png" alt="Katsuya">
-        </div>
-
-        <section class="lid" id="lid" aria-labelledby="lid-title">
-            <h1 class="lid-caption" id="lid-title">
-                Open your bento box!
-            </h1>
+        <section class="visit main-pad sea" id="location">
+            <h2 class="display lines">
+                <span class="ln"><span>Find us</span></span>
+                <span class="ln"><span style="--d:.12s">on Delmar.</span></span>
+            </h2>
+            <div class="loc-stack" id="locStack">
+                <div class="loc-stage">
+                    <div class="tray">
+                        <div class="cell">
+                            <div class="card">
+                                <div class="frame" data-media="inside.jpg" data-alt="Inside the restaurant"></div>
+                            </div>
+                        </div>
+                        <div class="cell">
+                            <div class="card">
+                                <div class="frame" data-media="outside.jpg" data-alt="Outside the restaurant"></div>
+                            </div>
+                        </div>
+                        <div class="cell">
+                            <div class="card"><iframe title="Map"
+                                    src="https://www.google.com/maps?q=Katsuya+6301+Delmar+Blvd+St.+Louis+MO+63130&amp;output=embed"
+                                    loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="v-info">
+                <address>6301 Delmar Blvd<br>St. Louis, MO 63130</address>
+                <div class="hrs"><small>Open daily</small><b>11am–8pm</b></div>
+                <div class="pills rv">
+                    <a href="tel:+13142963368">(314) 296-3368</a>
+                    <a href="https://maps.app.goo.gl/B7sM3sgMg72Yxq3B6" target="_blank" rel="noopener">Open in Google
+                        Maps</a>
+                </div>
+            </div>
         </section>
     </main>
 
+    <footer class="foot main-pad">
+        <div class="foot-top">
+            <div class="pills"><a href="#home" data-go="home">Back to top</a></div>
+        </div>
+        <div class="wordmark" aria-hidden="true">KATSUYA</div>
+    </footer>
+
     <script>
-        const journey = document.querySelector(".journey");
-        const stage = document.querySelector(".logo-stage");
-        const logo = document.querySelector(".logo");
-        const lidCover = document.querySelector(".lid-cover");
-        const homeDot = document.querySelector(
-            'a.sidebar-dot[href="#home"]'
-        );
-        const lidDot = document.querySelector(
-            'a.sidebar-dot[href="#lid"]'
-        );
+        const LOGO = { x: 0.4934, y: 0.5, w: 0.3807 };
+        const FALLBACK = { w: 1366, h: 768 };
 
-        let frameRequested = false;
+        const cali = 'California roll with imitation crab meat, cucumber, avocado, and rice, topped with ';
+        const panko = ' covered with panko breadcrumbs and deep-fried.';
+        const raw = 'Contains raw fish.';
+        const veg = 'Vegetarian.';
 
-        function updateScene() {
-            const width = stage.clientWidth;
-            const height = stage.clientHeight;
+        const MENU = [
+            {
+                title: 'Katsu Bento',
+                media: ['katsu2.jpg', 'katsuvid.mov'],
+                note: 'Served with rice, salad with ginger dressing, pickled vegetables, potato salad, seaweed salad, edamame, tamago, and a daily side dish. Tap a dish for details.',
+                items: [
+                    ['Pork Katsu', '$15.50', 'Pork loin' + panko],
+                    ['Chicken Katsu', '$14.50', 'Chicken breast' + panko],
+                    ['Shrimp Katsu', '$16', 'Shrimp' + panko],
+                    ['Tofu Katsu', '$14', 'Tofu' + panko, 'Box filled with vegetarian items.'],
+                    ['Cheese Katsu', '$16', 'Pork and melted mozzarella' + panko],
+                    ['Menchi Katsu', '$15', 'Ground pork, chicken, and onion formed into a patty, covered with panko breadcrumbs, and deep-fried.'],
+                    ['Potato Korokke Box', '$15', 'Three fried potato croquettes. Served with rice, salad with ginger dressing, pickled vegetables, potato salad, seaweed salad, edamame, and tamago.', veg + ' All vegetarian sides.'],
+                    ['Fish Katsu', '$16', 'Three pieces of white fish, flounder or snapper,' + panko]
+                ]
+            },
+            {
+                title: 'Sushi Bento',
+                media: ['sushi.mov', 'sushi2.jpg'],
+                note: 'Served with salad with ginger dressing, seaweed salad, edamame, potato salad, tamago, cake, and a daily side dish. Tap a dish for details.',
+                items: [
+                    ['Katsuya Roll', '$16', 'Tuna, salmon, crab, tempura shrimp, avocado, and scallions.', raw],
+                    ['Alaskan Roll', '$14', cali + 'seared Alaskan king salmon.'],
+                    ['Spicy Salmon Roll', '$14', cali + 'spicy salmon, house sauce, and scallions.', raw],
+                    ['Spicy Tuna Roll', '$14', cali + 'spicy tuna and Sriracha.', raw],
+                    ['Crunch Roll', '$14', cali + 'crab meat, crunch mix, and house sauce.'],
+                    ['Fried Philly Roll', '$14', 'Deep-fried roll with cream cheese, avocado, salmon, eel sauce, and spicy mayo.'],
+                    ['Veggie Roll', '$14', 'Cucumber, avocado, and mixed vegetables wrapped in seaweed paper.', veg],
+                    ['King Kong Roll', '$16', 'Deep-fried roll with two tempura shrimp, tuna, cucumber, avocado, and imitation crab meat. Topped with eel sauce and spicy mayo.'],
+                    ['Spider Roll', '$17', 'Fried soft-shell crab, imitation crab meat, cucumber, avocado, and masago, topped with eel sauce.'],
+                    ['Salmon Nigiri (6)', '$16', 'Six pieces. Slices of salmon placed on top of sushi rice.'],
+                    ['Shrimp Nigiri (6)', '$16'],
+                    ['Salmon/Shrimp Nigiri (6)', '$16.50', 'Three salmon nigiri and three shrimp nigiri.'],
+                    ['Salmon/Avocado Roll', '$14', 'Salmon and avocado.']
+                ]
+            },
+            {
+                title: 'À La Carte',
+                media: ['sushi.mov', 'sushi2.jpg'],
+                note: 'Individual sushi orders, packed with ginger, wasabi, and soy sauce. Tap a dish for details.',
+                items: [
+                    ['Single Cali Roll', '$7.50', 'California roll with imitation crab meat, cucumber, avocado, and rice, wrapped in seaweed paper.'],
+                    ['Single Katsuya Roll', '$11', 'Tuna, salmon, imitation crab meat, tempura shrimp, avocado, and scallions.', raw],
+                    ['Single Alaskan Roll', '$10', cali + 'seared Alaskan king salmon.', raw],
+                    ['Single Spicy Salmon', '$10', cali + 'spicy salmon, house sauce, and scallions.', raw],
+                    ['Single Spicy Tuna Roll', '$10', cali + 'spicy tuna, Sriracha sauce, and scallions.', raw],
+                    ['Single Crunch Roll', '$10', cali + 'crab meat, crunch mix, and house sauce.'],
+                    ['Single Fried Philly', '$10', 'Deep-fried roll with cream cheese, avocado, salmon, imitation crab meat, eel sauce, and spicy mayo.'],
+                    ['Single Veggie Roll', '$8', 'Cucumber, avocado, and mixed vegetables rolled with rice and seaweed paper.'],
+                    ['Single King Kong Roll', '$11', 'Deep-fried roll with two tempura shrimp, tuna, cucumber, avocado, and imitation crab meat. Topped with eel sauce and spicy mayo.'],
+                    ['Salmon Nigiri (6)', '$12', 'Six pieces. Slices of salmon placed on top of sushi rice.'],
+                    ['Shrimp Nigiri (6)', '$12'],
+                    ['Salmon/Shrimp Nigiri (6)', '$12.50', 'Three salmon nigiri and three shrimp nigiri.'],
+                    ['Single Salmon/Avocado Roll', '$8']
+                ]
+            },
+            {
+                title: 'Side Dishes',
+                media: ['side.jpg', 'side2.jpg'],
+                note: 'Soup, salads, and small plates.',
+                items: [
+                    ['Miso Soup', '$2.50'],
+                    ['Rice', '$2.50'],
+                    ['Egg Roll (2)', '$6'],
+                    ['Vegetable Egg Roll (2)', '$6'],
+                    ['Crab Rangoon (5)', '$6.50'],
+                    ['Gyoza (6)', '$6.50'],
+                    ['Curry Sauce', '$3.50'],
+                    ['Katsuya Salad', '$3.50', 'House salad served with ginger dressing.'],
+                    ['Seaweed Salad', '$5.50'],
+                    ['Takoyaki (6)', '$6.50', 'Six ball-shaped Japanese snacks made with wheat-based batter and filled with minced octopus.'],
+                    ['House Kimchi', '$3'],
+                    ['Potato Korokke (2)', '$6', 'Two mashed potato croquettes coated with panko breadcrumbs and deep-fried.', veg]
+                ]
+            }
+        ];
 
-            const photoWidth = 1366;
-            const photoHeight = 768;
+        const root = document.documentElement;
+        const stage = document.getElementById('stage');
+        const wrap = document.getElementById('wrap');
+        const photo = document.getElementById('photo');
+        const cover = document.getElementById('cover');
+        const logo = document.getElementById('logo');
+        const dock = document.getElementById('dock');
+        const caption = document.getElementById('caption');
+        const track = document.getElementById('bento');
+        const about = document.getElementById('about');
+        const locationSection = document.getElementById('location');
+        const tabs = document.getElementById('tabs');
+        const included = document.getElementById('included');
+        const listwrap = document.getElementById('listwrap');
+        const thumb = document.getElementById('thumb');
+        const shots = document.getElementById('shots');
+        const prog = document.getElementById('prog');
+        const footerEl = document.querySelector('.foot');
+        const sym = document.getElementById('bgsym');
+        const badgeEl = document.querySelector('.badge');
+        const locStack = document.getElementById('locStack');
+        const cards = [...document.querySelectorAll('.cell')];
+        const links = [...document.querySelectorAll('[data-go]')];
+        const navLinks = [...document.querySelectorAll('.nav a')];
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-            const scale = Math.max(
-                width / photoWidth,
-                height / photoHeight
-            );
+        const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+        const smooth = t => t * t * (3 - 2 * t);
+        const lists = [];
+        const slides = MENU.map(() => []);
+        let comps = [];
+        let pars = [];
+        let rows = [];
+        let overflow = 0;
+        let trackTop = 0;
+        let current = 0;
+        let queued = false;
+        let lastS = 0;
+        let vel = 0;
+        let drift = 0;
 
-            const offsetX = (width - photoWidth * scale) / 2;
-            const offsetY = (height - photoHeight * scale) / 2;
+        function loadFirst(el, names, onFail) {
+            let i = 0;
+            el.addEventListener('error', () => {
+                i += 1;
+                if (i < names.length) el.src = names[i];
+                else onFail();
+            });
+            el.addEventListener('load', request);
+            el.src = names[0];
+        }
 
-            const startX = offsetX + 674 * scale;
-            const startY = offsetY + 384 * scale;
-
-            const progress = Math.min(
-                1,
-                Math.max(
-                    0,
-                    -journey.getBoundingClientRect().top / height
-                )
-            );
-
-            const settleProgress = Math.min(
-                1,
-                Math.max(0, (progress - 0.85) / 0.15)
-            );
-
-            const easedProgress =
-                settleProgress * settleProgress * (3 - 2 * settleProgress);
-
-            const centerX =
-                startX + (width / 2 - startX) * easedProgress;
-
-            const centerY =
-                startY + (height / 2 - startY) * easedProgress;
-
-
-            lidCover.style.transform =
-                `translateY(${(1 - progress) * 100}%)`;
-
-            const waveHeight = Math.sin(progress * Math.PI);
-
-            lidCover.style.setProperty("--wave-height", waveHeight);
-
-            logo.style.width = `${520 * scale}px`;
-            logo.style.left = `${centerX}px`;
-            logo.style.top = `${centerY}px`;
-
-            if (progress >= 0.5) {
-                homeDot.removeAttribute("aria-current");
-                lidDot.setAttribute("aria-current", "location");
+        function mediaEl(file, alt) {
+            const base = file.slice(0, file.lastIndexOf('.'));
+            const isVideo = /\.(mov|mp4|webm|m4v)$/i.test(file);
+            const exts = isVideo ? ['.mp4', '.mov', '.webm'] : ['.jpg', '.jpeg', '.png', '.webp'];
+            const cap = base.charAt(0).toUpperCase() + base.slice(1);
+            const camel = cap.replace(/vid$/i, 'Vid');
+            const names = [];
+            [base, cap, camel].forEach(b => [file.slice(file.lastIndexOf('.')), ...exts, ...exts.map(e => e.toUpperCase())].forEach(e => names.push(b + e)));
+            names.unshift(file);
+            const uniq = names.filter((n, i, a) => a.indexOf(n) === i);
+            names.length = 0;
+            names.push(...uniq);
+            let el;
+            if (isVideo) {
+                el = document.createElement('video');
+                el.muted = true;
+                el.loop = true;
+                el.playsInline = true;
+                el.preload = 'auto';
+                el.setAttribute('muted', '');
+                el.setAttribute('playsinline', '');
+                el.setAttribute('aria-label', alt);
             } else {
-                lidDot.removeAttribute("aria-current");
-                homeDot.setAttribute("aria-current", "location");
+                el = document.createElement('img');
+                el.alt = alt;
             }
-
-            lidCover.style.setProperty(
-                "--wave-opacity",
-                Math.min(1, progress / 0.12)
-            );
-
-            frameRequested = false;
+            loadFirst(el, names, () => { el.style.display = 'none'; });
+            return el;
         }
 
-        function requestUpdate() {
-            if (!frameRequested) {
-                frameRequested = true;
-                requestAnimationFrame(updateScene);
+        function buildMenu() {
+            for (let k = 0; k < 2; k++) {
+                const shot = document.createElement('div');
+                shot.className = 'compartment shot';
+                MENU.forEach((cat, ci) => {
+                    const slide = document.createElement('div');
+                    slide.className = 'slide';
+                    const el = mediaEl(cat.media[k], cat.title);
+                    if (el.tagName === 'VIDEO') {
+                        el.addEventListener('canplay', () => {
+                            if (slide.classList.contains('on')) el.play().catch(() => { });
+                        });
+                    }
+                    slide.append(el);
+                    shot.append(slide);
+                    slides[ci].push(slide);
+                });
+                shots.append(shot);
+            }
+
+            MENU.forEach((cat, ci) => {
+                const tab = document.createElement('button');
+                tab.type = 'button';
+                tab.className = 'tab';
+                tab.setAttribute('role', 'tab');
+                tab.textContent = cat.title;
+                tab.addEventListener('click', () => chooseCategory(ci));
+                tabs.append(tab);
+
+                const list = document.createElement('div');
+                list.className = 'list';
+                cat.items.forEach(([name, price, desc, tag]) => {
+                    const nameEl = document.createElement('span');
+                    nameEl.className = 'name';
+                    nameEl.textContent = name;
+                    const priceEl = document.createElement('span');
+                    priceEl.className = 'price';
+                    priceEl.textContent = price;
+                    const front = document.createElement('div');
+                    front.className = 'face';
+                    front.append(nameEl, priceEl);
+                    const inner = document.createElement('div');
+                    inner.className = 'slot-inner';
+                    inner.append(front);
+
+                    let slot;
+                    if (desc) {
+                        const back = document.createElement('div');
+                        back.className = 'face back';
+                        const text = document.createElement('span');
+                        text.className = 'desc';
+                        text.textContent = desc + ' ';
+                        if (tag) {
+                            const em = document.createElement('em');
+                            em.textContent = tag;
+                            text.append(em);
+                        }
+                        back.append(text);
+                        inner.append(back);
+                        slot = document.createElement('button');
+                        slot.type = 'button';
+                        slot.className = 'slot';
+                        slot.setAttribute('aria-pressed', 'false');
+                        slot.addEventListener('click', () => {
+                            const on = slot.classList.toggle('flipped');
+                            slot.setAttribute('aria-pressed', on);
+                        });
+                    } else {
+                        slot = document.createElement('div');
+                        slot.className = 'slot plain';
+                    }
+                    slot.append(inner);
+                    list.append(slot);
+                });
+                listwrap.append(list);
+                lists.push(list);
+            });
+
+            comps = [...document.querySelectorAll('.bento-box .compartment')];
+        }
+
+        function buildFrames() {
+            const io = new IntersectionObserver(entries => {
+                entries.forEach(en => {
+                    if (en.isIntersecting) en.target.play().catch(() => { });
+                    else en.target.pause();
+                });
+            }, { threshold: 0.25 });
+
+            document.querySelectorAll('.frame[data-media]').forEach(frame => {
+                const el = mediaEl(frame.dataset.media, frame.dataset.alt || '');
+                frame.append(el);
+                if (el.tagName === 'VIDEO') io.observe(el);
+            });
+        }
+
+        function buildMotion() {
+            document.querySelectorAll('.tk-row').forEach(row => {
+                const unit = row.dataset.words.split('|').map(w => w + '<i></i>').join('');
+                row.firstElementChild.innerHTML = '<i></i>' + unit;
+                rows.push({ el: row, sec: row.closest('section'), dir: parseFloat(row.dataset.dir) });
+            });
+
+            pars = [...document.querySelectorAll('[data-par]')].map(el => ({
+                el,
+                sec: el.closest('section, footer'),
+                speed: parseFloat(el.dataset.par)
+            }));
+
+            const targets = document.querySelectorAll('.rv, .rv-clip, .lines, .rv-bar');
+            if (reduce) {
+                targets.forEach(t => t.classList.add('in'));
+                return;
+            }
+            const rvObserver = new IntersectionObserver(entries => {
+                entries.forEach(en => {
+                    if (en.isIntersecting) {
+                        en.target.classList.add('in');
+                        rvObserver.unobserve(en.target);
+                    }
+                });
+            }, { threshold: 0.18 });
+            targets.forEach(t => rvObserver.observe(t));
+        }
+
+        function setCategory(idx) {
+            current = idx;
+            [...tabs.children].forEach((t, i) => t.setAttribute('aria-selected', i === idx));
+            lists.forEach((l, i) => l.classList.toggle('on', i === idx));
+            slides.forEach((group, ci) => group.forEach(slide => {
+                slide.classList.toggle('on', ci === idx);
+                const v = slide.querySelector('video');
+                if (v) {
+                    if (ci === idx) v.play().catch(() => { });
+                    else v.pause();
+                }
+            }));
+            included.textContent = MENU[idx].note;
+            lists[idx].scrollTop = 0;
+        }
+
+        function chooseCategory(idx) {
+            if (idx === current) return;
+            setCategory(idx);
+            measure();
+            const H = window.innerHeight;
+            if (window.scrollY > trackTop + H) window.scrollTo({ top: trackTop + H, behavior: 'auto' });
+        }
+
+        function measure() {
+            const H = window.innerHeight;
+            track.style.height = '';
+            trackTop = track.getBoundingClientRect().top + window.scrollY;
+            const list = lists[current];
+            overflow = Math.max(0, list.scrollHeight - list.clientHeight);
+            track.style.height = `${H * 3 + overflow}px`;
+            request();
+        }
+
+        function update() {
+            queued = false;
+            const H = stage.clientHeight;
+            const s = window.scrollY;
+
+            const areaW = wrap.clientWidth;
+            const areaH = wrap.clientHeight;
+            const areaL = wrap.offsetLeft;
+            const areaT = wrap.offsetTop;
+
+            const pw = photo.naturalWidth || FALLBACK.w;
+            const ph = photo.naturalHeight || FALLBACK.h;
+            const scale = Math.max(areaW / pw, areaH / ph);
+            const offX = (areaW - pw * scale) / 2;
+            const offY = (areaH - ph * scale) / 2;
+
+            const startX = areaL + offX + LOGO.x * pw * scale;
+            const startY = areaT + offY + LOGO.y * ph * scale;
+            const logoW = LOGO.w * pw * scale;
+            const ratio = (logo.naturalHeight && logo.naturalWidth) ? logo.naturalHeight / logo.naturalWidth : 1;
+
+            const midX = areaL + areaW / 2;
+            const midY = areaT + areaH / 2;
+
+            const progress = clamp(s / H, 0, 1);
+            const settle = smooth(clamp((progress - 0.85) / 0.15, 0, 1));
+            const shrink = smooth(clamp((s - H * 1.5) / (H * 0.5), 0, 1));
+
+            photo.style.transform = reduce ? '' : `scale(${1 + 0.1 * progress})`;
+            cover.style.transform = `translateY(${(1 - progress) * 100}%)`;
+            cover.style.setProperty('--wave-opacity', Math.min(1, progress / 0.12));
+
+            const d = dock.getBoundingClientRect();
+            const dockX = d.left + d.width / 2;
+            const dockY = d.top + d.height / 2;
+            const dockW = d.width;
+
+            let cx = startX + (midX - startX) * settle;
+            let cy = startY + (midY - startY) * settle;
+            let w = logoW;
+
+            if (shrink > 0) {
+                cx = midX + (dockX - midX) * shrink;
+                cy = midY + (dockY - midY) * shrink;
+                w = logoW + (dockW - logoW) * shrink;
+            }
+
+            logo.style.width = `${w}px`;
+            logo.style.left = `${cx}px`;
+            logo.style.top = `${cy}px`;
+            logo.style.pointerEvents = shrink > 0.95 ? 'auto' : 'none';
+            logo.style.cursor = shrink > 0.95 ? 'pointer' : 'default';
+
+            caption.style.top = `${midY + (logoW * ratio) / 2 + 24}px`;
+            caption.style.opacity = clamp((progress - 0.9) / 0.1, 0, 1) * (1 - shrink);
+
+
+            const closeP = clamp((s - trackTop - H * 1.25 - overflow - H * 0.1) / (H * 0.5), 0, 1);
+            const open = clamp((s - trackTop - H * 0.1) / (H * 0.8), 0, 1);
+            comps.forEach((c, i) => {
+                const p = reduce ? 1 : smooth(clamp(open * 1.7 - i * 0.28, 0, 1));
+                c.style.opacity = p;
+                c.style.transform = p >= 1 ? '' : `translateY(${(1 - p) * 28}px) scale(${0.97 + 0.03 * p})`;
+            });
+
+            const pos = clamp(s - trackTop - H * 1.25, 0, overflow);
+            const list = lists[current];
+            list.scrollTop = pos;
+            const frac = Math.min(1, list.clientHeight / (list.scrollHeight || 1));
+            const room = listwrap.clientHeight * (1 - frac);
+            thumb.style.height = `${frac * 100}%`;
+            thumb.style.top = `${overflow ? (pos / overflow) * room : 0}px`;
+
+            lid.style.transform = `translateY(${(-(1 - smooth(closeP)) * 100).toFixed(2)}%)`;
+
+
+            if (!reduce) {
+                pars.forEach(p => {
+                    const rc = p.sec.getBoundingClientRect();
+                    const c = rc.top + rc.height / 2 - H / 2;
+                    p.el.style.setProperty('--py', `${(-c * p.speed).toFixed(1)}px`);
+                });
+                const dv = s - lastS;
+                lastS = s;
+                vel += (dv - vel) * 0.18;
+                drift += 0.35 + Math.abs(vel) * 0.5;
+                const skew = clamp(-vel * 0.4, -14, 14);
+                let alive = Math.abs(vel) > 0.05;
+                const vw = window.innerWidth;
+                rows.forEach(r => {
+                    const rc = r.sec.getBoundingClientRect();
+                    const c = rc.top + rc.height / 2 - H / 2;
+                    const u = r.el.firstElementChild.getBoundingClientRect().width / 4 || 1;
+                    const dm = drift % u;
+                    const dx = r.dir < 0 ? -dm : dm - u;
+                    const tx = c * r.dir * 0.8 + dx;
+                    r.el.style.transform = `translate3d(${tx.toFixed(1)}px, 0, 0) skewX(${skew.toFixed(2)}deg)`;
+                    if (rc.bottom > 0 && rc.top < H) alive = true;
+                });
+                if (alive) request();
+                root.style.setProperty('--rot', `${(s * 0.12).toFixed(1)}deg`);
+            }
+
+            const vwid = window.innerWidth;
+            const aR = about.getBoundingClientRect();
+            const symOn = aR.top < H * 0.85;
+            badgeEl.style.visibility = symOn ? 'hidden' : 'visible';
+            if (symOn) {
+                const bR = badgeEl.getBoundingClientRect();
+                const gp = smooth(clamp((H * 0.9 - aR.bottom) / (H * 0.8), 0, 1));
+                const big = Math.min(vwid * 0.75, H * 0.95, 900);
+                let sx = bR.left + bR.width / 2 + (vwid / 2 - (bR.left + bR.width / 2)) * gp;
+                let sy = bR.top + bR.height / 2 + (H / 2 - (bR.top + bR.height / 2)) * gp;
+                let sw = bR.width + (big - bR.width) * gp;
+                let so = 1 - 0.72 * gp;
+                const fr = footerEl.getBoundingClientRect();
+                const ex = smooth(clamp((H - fr.top) / (fr.height * 0.85), 0, 1));
+                if (ex > 0) {
+                    sx = sx + (vwid / 2 - sx) * ex;
+                    sy = sy + (H - sy) * ex;
+                    sw = sw + (Math.min(vwid * 0.9, 1100) - sw) * ex;
+                    so = so + (1 - so) * ex;
+                }
+                sym.style.left = `${sx}px`;
+                sym.style.top = `${sy}px`;
+                sym.style.width = `${sw}px`;
+                sym.style.opacity = so.toFixed(3);
+                sym.style.zIndex = gp > 0.5 ? 0 : 5;
+            } else {
+                sym.style.opacity = 0;
+            }
+
+            const lr2 = locStack.getBoundingClientRect();
+            const lp = clamp((H * 0.6 - lr2.top) / (lr2.height - H + H * 0.6), 0, 1);
+            const tt = cards.map((c, i) => reduce ? (i === cards.length - 1 ? 1 : 1) : smooth(clamp((lp - i * 0.3) / 0.3, 0, 1)));
+            cards.forEach((c, i) => {
+                const t = tt[i];
+                c.style.transform = `translateY(${((1 - t) * H * 1.1).toFixed(1)}px)`;
+            });
+
+            const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+            prog.style.transform = `scaleY(${clamp(s / maxScroll, 0, 1)})`;
+
+            const lr = about.getBoundingClientRect();
+            document.body.classList.toggle('light', lr.top < H * 0.5 && lr.bottom > H * 0.5);
+
+            let active = 'home';
+            if (s >= H * 0.5) active = 'lid';
+            if (s >= locationSection.offsetTop - H * 0.5) active = 'location';
+            else if (s >= about.offsetTop - H * 0.5) active = 'about';
+            navLinks.forEach(a => a.classList.toggle('active', a.dataset.go === active));
+            morphInfo();
+        }
+
+        function request() {
+            if (!queued) {
+                queued = true;
+                requestAnimationFrame(update);
             }
         }
 
-        window.addEventListener("scroll", requestUpdate, {
-            passive: true
+        function goTo(name) {
+            const H = window.innerHeight;
+            let top = 0;
+            if (name === 'lid') top = H * 1.25;
+            if (name === 'about') top = about.offsetTop;
+            if (name === 'location') top = locationSection.offsetTop;
+            window.scrollTo({ top, behavior: 'smooth' });
+        }
+
+        const bentoBox = document.getElementById('box');
+        const boxCols = [...bentoBox.children];
+        const lid = document.getElementById('lid');
+        const whereFix = document.getElementById('whereFix');
+        const hoursFix = document.getElementById('hoursFix');
+        const vinfo = document.querySelector('.v-info');
+        const tAddr = vinfo.querySelector('address');
+        const tHrs = vinfo.querySelector('.hrs');
+
+        function resetFix(f) {
+            ['top', 'left', 'bottom', 'fontSize', 'lineHeight', 'letterSpacing', 'gap', 'textShadow'].forEach(p => { f.style[p] = ''; });
+            f.querySelectorAll('span').forEach(sp => {
+                sp.style.fontSize = '';
+                sp.style.letterSpacing = '';
+                sp.style.opacity = '';
+                sp.style.marginBottom = '';
+            });
+            f.classList.remove('big');
+        }
+
+        function morphInfo() {
+            const H = window.innerHeight;
+            if (!whereFix.offsetWidth) {
+                vinfo.classList.add('landed');
+                return;
+            }
+            const ir = vinfo.getBoundingClientRect();
+            const t = smooth(clamp((H - ir.top) / (H * 0.55), 0, 1));
+            const done = t >= 1;
+            vinfo.classList.toggle('landed', done);
+            resetFix(whereFix);
+            resetFix(hoursFix);
+            whereFix.style.visibility = done ? 'hidden' : 'visible';
+            hoursFix.style.visibility = done ? 'hidden' : 'visible';
+            if (t <= 0 || done) return;
+            const lp = (a, b) => a + (b - a) * t;
+
+            const aw = whereFix.getBoundingClientRect();
+            const bw = tAddr.getBoundingClientRect();
+            const wcs = getComputedStyle(tAddr);
+            const wfs0 = parseFloat(getComputedStyle(whereFix).fontSize);
+            const wfs1 = parseFloat(wcs.fontSize);
+            const wlh1 = parseFloat(wcs.lineHeight) / wfs1;
+            whereFix.style.bottom = 'auto';
+            whereFix.style.top = `${lp(aw.top, bw.top)}px`;
+            whereFix.style.left = `${lp(aw.left, bw.left)}px`;
+            whereFix.style.fontSize = `${lp(wfs0, wfs1)}px`;
+            whereFix.style.lineHeight = lp(1.4, wlh1);
+            whereFix.style.letterSpacing = `${lp(0, -0.005)}em`;
+            whereFix.classList.toggle('big', t > 0.5);
+            if (t > 0.5) whereFix.style.textShadow = 'none';
+
+            const ah = hoursFix.getBoundingClientRect();
+            const bh = tHrs.getBoundingClientRect();
+            const lab = hoursFix.children[0];
+            const tim = hoursFix.children[1];
+            const lab1 = parseFloat(getComputedStyle(tHrs.querySelector('small')).fontSize);
+            const tim1 = parseFloat(getComputedStyle(tHrs.querySelector('b')).fontSize);
+            const lab0 = parseFloat(getComputedStyle(lab).fontSize);
+            const tim0 = parseFloat(getComputedStyle(tim).fontSize);
+            hoursFix.style.bottom = 'auto';
+            hoursFix.style.top = `${lp(ah.top, bh.top)}px`;
+            hoursFix.style.left = `${lp(ah.left, bh.left)}px`;
+            hoursFix.style.gap = `${lp(4, 0)}px`;
+            hoursFix.style.lineHeight = lp(1.4, 1.55);
+            lab.style.fontSize = `${lp(lab0, lab1)}px`;
+            lab.style.letterSpacing = `${lp(0.14, 0)}em`;
+            lab.style.opacity = lp(0.8, 1);
+            lab.style.marginBottom = `${lp(0, 4.8)}px`;
+            tim.style.fontSize = `${lp(tim0, tim1)}px`;
+            tim.style.letterSpacing = `${lp(0, -0.01)}em`;
+            hoursFix.classList.toggle('big', t > 0.5);
+            if (t > 0.5) hoursFix.style.textShadow = 'none';
+        }
+
+        links.forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                goTo(link.dataset.go);
+            });
         });
+        logo.addEventListener('click', () => goTo('home'));
 
-        new ResizeObserver(requestUpdate).observe(stage);
+        window.addEventListener('scroll', request, { passive: true });
+        window.addEventListener('resize', measure);
+        window.addEventListener('load', measure);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
 
-        updateScene();
+        buildMenu();
+        buildFrames();
+        buildMotion();
+        setCategory(0);
 
-        const waveHeight = Math.sin(progress * Math.PI);
+        loadFirst(photo, ['homepage.png', 'Homepage.png', 'homepage.jpg', 'homepage.jpeg', 'homepage.webp'], () => { photo.style.display = 'none'; });
+        loadFirst(logo, ['Logo.png', 'logo.png', 'katsuya.png', 'logo.svg'], () => { logo.style.display = 'none'; });
 
-        lidCover.style.setProperty("--wave-height", waveHeight);
+        measure();
+        const loader = document.getElementById('loader');
+        let loaderStarted = false;
+
+        function fadeLoader() {
+            loader.classList.add('done');
+            document.body.classList.remove('loading');
+        }
+
+        function hideLoader() {
+            if (loaderStarted) return;
+            loaderStarted = true;
+            const mark = loader.querySelector('.mark');
+            const img = mark.firstElementChild;
+            const r = logo.getBoundingClientRect();
+            if (!r.width) {
+                fadeLoader();
+                return;
+            }
+            const m = new DOMMatrix(getComputedStyle(img).transform);
+            const angle = (Math.atan2(m.b, m.a) * 180 / Math.PI + 360) % 360;
+            img.getAnimations().forEach(a => a.cancel());
+            img.style.transform = `rotate(${angle}deg)`;
+            img.offsetWidth;
+            img.style.transition = 'transform 1s cubic-bezier(.6, 0, .2, 1)';
+            img.style.transform = 'rotate(360deg)';
+            mark.style.left = `${r.left + r.width / 2}px`;
+            mark.style.top = `${r.top + r.height / 2}px`;
+            mark.style.width = `${r.width}px`;
+            setTimeout(fadeLoader, 1050);
+        }
+
+        window.addEventListener('load', () => setTimeout(hideLoader, 600));
+        setTimeout(hideLoader, 5000);
     </script>
 </body>
 

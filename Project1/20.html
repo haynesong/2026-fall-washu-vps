@@ -6,12 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Katsuya</title>
     <link rel="icon" type="image/png" href="Logo.png">
-    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&display=swap"
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Newsreader:ital,wght@0,400;0,500;1,400&display=swap"
         rel="stylesheet">
     <style>
         :root {
-            --red: #d02b1c;
-            --cream: #f7f2e8
+            --display: "Space Grotesk", "Helvetica Neue", Arial, sans-serif;
+            --serif: "Newsreader", Georgia, serif
         }
 
         * {
@@ -20,197 +23,647 @@
             padding: 0
         }
 
+        html {
+            scroll-behavior: smooth
+        }
+
         body {
-            background: #000;
-            color: var(--cream);
-            font-family: "Lora", Georgia, serif
+            background: #f6f1e7;
+            color: #161616;
+            font-family: var(--serif);
+            line-height: 1.5
         }
 
-        .poster {
-            min-height: 100svh;
-            position: relative;
+        a {
+            color: inherit
+        }
+
+        h1,
+        h2,
+        nav a,
+        .pills a,
+        address,
+        .hours,
+        .wordmark {
+            font-family: var(--display)
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem
+        }
+
+        header img {
+            width: 56px
+        }
+
+        nav a {
+            text-decoration: none;
+            margin-left: 1.4rem;
+            transition: color .25s
+        }
+
+        nav a:hover {
+            color: #b3271b
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 600
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            font-weight: 600
+        }
+
+        summary,
+        .plain {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: .75rem 0;
+            border-bottom: 1px solid #cfc6b3;
+            cursor: pointer;
+            list-style: none;
+            transition: color .25s, padding-left .25s
+        }
+
+        .plain {
+            cursor: default
+        }
+
+        summary:hover {
+            color: #b3271b;
+            padding-left: .5rem
+        }
+
+        details p {
+            padding: .2rem 0 1rem;
+            font-size: .9rem
+        }
+
+        em {
+            color: #b3271b
+        }
+
+        footer a:hover {
+            color: #b3271b
+        }
+
+        #c0:checked~.panels .p0,
+        #c1:checked~.panels .p1,
+        #c2:checked~.panels .p2,
+        #c3:checked~.panels .p3 {
+            display: block
+        }
+
+        #c0:checked~.tabs label[for=c0],
+        #c1:checked~.tabs label[for=c1],
+        #c2:checked~.tabs label[for=c2],
+        #c3:checked~.tabs label[for=c3] {
+            background: #161616;
+            color: #f6f1e7
+        }
+
+        .menu input {
+            display: none
+        }
+
+        .tabs {
             display: grid;
-            place-items: center;
-            overflow: hidden;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 1rem
+        }
+
+        .tabs label {
+            border: 1px solid #161616;
             text-align: center;
-            padding: 40px 20px
+            padding: .6rem .4rem;
+            cursor: pointer;
+            font-size: .9rem;
+            transition: background .2s, color .2s
         }
 
-        .sun {
-            position: absolute;
-            width: min(92vw, 86svh);
-            aspect-ratio: 1;
-            border-radius: 50%;
-            background: repeating-linear-gradient(-35deg, var(--red) 0 90px, #000 90px 106px);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%)
+        .tabs label:hover {
+            background: #e6dcc8
         }
 
-        .poster h1 {
-            position: relative;
-            font-family: Arial, Helvetica, sans-serif;
-            font-weight: 700;
-            font-size: clamp(3.4rem, 14vw, 12rem);
-            letter-spacing: -.02em;
-            line-height: .9;
-            mix-blend-mode: difference;
-            color: #fff
+        .panel {
+            display: none
         }
 
-        .poster nav {
-            position: absolute;
-            top: 24px;
-            left: 0;
-            right: 0;
-            display: flex;
-            justify-content: center;
-            gap: 34px
-        }
-
-        .poster nav a {
-            color: var(--cream);
-            text-decoration: none;
-            font-size: .95rem;
-            letter-spacing: .04em
-        }
-
-        .poster nav a:hover {
-            color: var(--red)
-        }
-
-        .belt {
-            overflow: hidden;
-            background: #000;
-            padding: 50px 0;
-            border-top: 1px solid var(--red);
-            border-bottom: 1px solid var(--red)
-        }
-
-        .belt div {
-            display: flex;
-            width: max-content;
-            white-space: nowrap;
-            font-size: clamp(3rem, 9vw, 8rem);
-            line-height: 1.1
-        }
-
-        .belt span {
-            padding-right: .5em
-        }
-
-        .belt .a {
-            color: transparent;
-            -webkit-text-stroke: 1.5px rgba(247, 242, 232, .55);
-            animation: l 30s linear infinite
-        }
-
-        .belt .b {
-            color: var(--red);
-            animation: r 30s linear infinite
-        }
-
-        @keyframes l {
-            to {
-                transform: translateX(-50%)
-            }
-        }
-
-        @keyframes r {
-            from {
-                transform: translateX(-50%)
-            }
-
-            to {
-                transform: none
-            }
-        }
-
-        .cats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr)
-        }
-
-        .cats a {
-            display: block;
-            padding: 70px 40px;
-            border: 1px solid #222;
-            color: var(--cream);
-            text-decoration: none;
-            font-size: clamp(2rem, 5vw, 4rem);
-            transition: background .3s, color .3s
-        }
-
-        .cats a small {
-            display: block;
-            font-size: .95rem;
+        .note {
+            font-size: .85rem;
             font-style: italic;
-            margin-top: 10px;
-            color: #9b9384;
-            transition: color .3s
+            margin-bottom: .4rem
         }
 
-        .cats a:hover {
-            background: var(--red)
+        .pair {
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 1.5rem;
+            align-items: center;
+            margin-bottom: 2rem
         }
 
-        .cats a:hover small {
-            color: var(--cream)
+        .pair video,
+        .pair img {
+            width: 100%;
+            display: block
         }
 
-        .foot {
-            padding: 60px 20px;
-            text-align: center;
-            color: #b9b1a2;
-            line-height: 1.8
+        .pair video {
+            height: 360px;
+            object-fit: cover
         }
 
-        .foot b {
-            display: block;
-            color: var(--cream);
-            font-weight: 400;
-            font-size: 1.4rem
+        .pills a {
+            text-decoration: none;
+            border: 1px solid #161616;
+            padding: .7rem 1.3rem;
+            display: inline-block;
+            transition: background .2s, color .2s
         }
 
-        @media(max-width:640px) {
-            .cats {
+        .pills a:hover {
+            background: #161616;
+            color: #f6f1e7
+        }
+
+        .pillnav {
+            position: fixed;
+            left: 50%;
+            bottom: 20px;
+            transform: translateX(-50%);
+            z-index: 20;
+            display: flex;
+            gap: 6px;
+            background: #161616;
+            padding: 6px;
+            border-radius: 999px
+        }
+
+        .pillnav a {
+            color: #f6f1e7;
+            text-decoration: none;
+            padding: .5rem 1rem;
+            border-radius: 999px;
+            font-family: var(--display);
+            font-size: .9rem;
+            transition: background .2s
+        }
+
+        .pillnav a:hover {
+            background: #b3271b
+        }
+
+        .hero {
+            height: 100vh;
+            position: relative
+        }
+
+        .hero img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block
+        }
+
+        .hero .logo {
+            position: absolute;
+            left: 24px;
+            top: 20px;
+            width: 64px;
+            height: auto;
+            object-fit: contain
+        }
+
+        .full {
+            min-height: 100vh;
+            padding: 5rem 1.5rem 6rem
+        }
+
+        .full>* {
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto
+        }
+
+        .full h2 {
+            font-size: 2.4rem;
+            margin-bottom: 1.5rem
+        }
+
+        .alt {
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='30' viewBox='0 0 60 30'%3E%3Cdefs%3E%3Cg id='s'%3E%3Ccircle r='30'/%3E%3Ccircle r='22' fill='none'/%3E%3Ccircle r='14' fill='none'/%3E%3Ccircle r='6' fill='none'/%3E%3C/g%3E%3C/defs%3E%3Cg fill='%23b79a6e' stroke='%23274034' stroke-opacity='.38'%3E%3Cuse href='%23s' x='30' y='-15'/%3E%3Cuse href='%23s' x='0' y='0'/%3E%3Cuse href='%23s' x='60' y='0'/%3E%3Cuse href='%23s' x='30' y='15'/%3E%3Cuse href='%23s' x='0' y='30'/%3E%3Cuse href='%23s' x='60' y='30'/%3E%3Cuse href='%23s' x='30' y='45'/%3E%3C/g%3E%3C/svg%3E");
+            background-size: 60px 30px
+        }
+
+        .tray {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 240px 300px;
+            gap: 12px;
+            margin-bottom: 1.5rem
+        }
+
+        .tray img,
+        .tray iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            object-fit: cover;
+            display: block
+        }
+
+        .tray iframe {
+            grid-column: 1/-1
+        }
+
+        address {
+            font-style: normal;
+            font-size: 1.6rem;
+            line-height: 1.3
+        }
+
+        .hours {
+            margin: .5rem 0 1rem
+        }
+
+        @media (max-width:700px) {
+            .tabs {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .pair {
                 grid-template-columns: 1fr
             }
 
-            .cats a {
-                padding: 44px 24px
+            .tray {
+                grid-template-columns: 1fr;
+                grid-template-rows: 200px 200px 260px
             }
+
+            .full h2 {
+                font-size: 1.8rem
+            }
+
+            .pillnav a {
+                padding: .45rem .7rem;
+                font-size: .8rem
+            }
+        }
+
+        .slot {
+            display: block;
+            position: relative;
+            height: 66px;
+            perspective: 1000px;
+            cursor: pointer
+        }
+
+        .slot input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none
+        }
+
+        .inner {
+            display: block;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform .7s
+        }
+
+        .slot input:checked+.inner {
+            transform: rotateX(180deg)
+        }
+
+        .face {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 0 .3rem;
+            background: #f6f1e7;
+            border-bottom: 1px solid #cfc6b3;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            transition: color .25s
+        }
+
+        .face.back {
+            transform: rotateX(180deg);
+            background: #e6dcc8;
+            font-size: .82rem;
+            line-height: 1.35;
+            display: block;
+            padding-top: .5rem;
+            overflow: hidden
+        }
+
+        .slot:hover .face {
+            color: #b3271b
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg)
+            }
+        }
+
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: #161616;
+            z-index: 100;
+            display: grid;
+            place-items: center;
+            animation: gone .6s 2.2s forwards
+        }
+
+        #loader img {
+            width: 110px;
+            animation: spin 1.4s linear infinite
+        }
+
+        @keyframes gone {
+            to {
+                opacity: 0;
+                visibility: hidden
+            }
+        }
+
+        .badge {
+            display: block;
+            width: 110px;
+            margin: 0 auto 1.5rem;
+            animation: spin 14s linear infinite
+        }
+
+        .closing {
+            height: 80vh;
+            display: grid;
+            place-items: center;
+            background: #161616;
+            overflow: hidden;
+            position: relative
+        }
+
+        .closing .lid {
+            position: absolute;
+            inset: 0;
+            background: #b3271b
+        }
+
+        .closing p {
+            position: relative;
+            font-family: var(--display);
+            font-weight: 600;
+            font-size: clamp(2rem, 5vw, 4rem);
+            color: #f6f1e7;
+            text-align: center;
+            padding: 0 2rem;
+            line-height: 1.1
+        }
+
+        @supports (animation-timeline:view()) {
+            .closing .lid {
+                animation: shut linear both;
+                animation-timeline: view();
+                animation-range: entry 0% cover 45%
+            }
+        }
+
+        @keyframes shut {
+            from {
+                transform: translateY(-100%)
+            }
+
+            to {
+                transform: translateY(0)
+            }
+        }
+
+        footer {
+            background: #161616;
+            color: #f6f1e7;
+            text-align: center;
+            padding: 3rem 1.5rem 7rem
+        }
+
+        .wordmark {
+            font-size: clamp(44px, 11vw, 150px);
+            line-height: 1;
+            font-weight: 700;
+            letter-spacing: .02em
         }
     </style>
 </head>
 
 <body>
-    <section class="poster">
-        <nav><a href="#menu">Menu</a><a href="#visit">Visit</a></nav>
-        <div class="sun"></div>
-        <h1>KATSUYA</h1>
+    <div id="loader"><img src="Logo.png" alt=""></div>
+    <nav class="pillnav"><a href="#home">Home</a><a href="#menu">Menu</a><a href="#about">About Us</a><a
+            href="#location">Location</a></nav>
+    <div class="hero" id="home"><img src="homepage.png" alt="Katsuya"><img class="logo" src="Logo.png" alt=""></div>
+    <section id="menu" class="full">
+        <div class="menu"><input type="radio" name="cat" id="c0" checked><input type="radio" name="cat" id="c1"><input
+                type="radio" name="cat" id="c2"><input type="radio" name="cat" id="c3">
+            <div class="tabs"><label for="c0">Katsu Bento</label><label for="c1">Sushi Bento</label><label for="c2">À La
+                    Carte</label><label for="c3">Side Dishes</label></div>
+            <div class="panels">
+                <div class="panel p0">
+                    <p class="note">Served with rice, salad with ginger dressing, pickled vegetables, potato salad,
+                        seaweed salad, edamame, tamago, and a daily side dish.</p><label class="slot"><input
+                            type="checkbox"><span class="inner"><span class="face"><span>Pork
+                                    Katsu</span><span>$15.50</span></span><span class="face back">Pork loin covered with
+                                panko breadcrumbs and deep-fried.</span></span></label><label class="slot"><input
+                            type="checkbox"><span class="inner"><span class="face"><span>Chicken
+                                    Katsu</span><span>$14.50</span></span><span class="face back">Chicken breast covered
+                                with panko breadcrumbs and deep-fried.</span></span></label><label class="slot"><input
+                            type="checkbox"><span class="inner"><span class="face"><span>Shrimp
+                                    Katsu</span><span>$16</span></span><span class="face back">Shrimp covered with panko
+                                breadcrumbs and deep-fried.</span></span></label><label class="slot"><input
+                            type="checkbox"><span class="inner"><span class="face"><span>Tofu
+                                    Katsu</span><span>$14</span></span><span class="face back">Tofu covered with panko
+                                breadcrumbs and deep-fried. <em>Box filled with vegetarian
+                                    items.</em></span></span></label><label class="slot"><input type="checkbox"><span
+                            class="inner"><span class="face"><span>Cheese Katsu</span><span>$16</span></span><span
+                                class="face back">Pork and melted mozzarella covered with panko breadcrumbs and
+                                deep-fried.</span></span></label><label class="slot"><input type="checkbox"><span
+                            class="inner"><span class="face"><span>Menchi Katsu</span><span>$15</span></span><span
+                                class="face back">Ground pork, chicken, and onion formed into a patty, covered with
+                                panko breadcrumbs, and deep-fried.</span></span></label><label class="slot"><input
+                            type="checkbox"><span class="inner"><span class="face"><span>Potato Korokke
+                                    Box</span><span>$15</span></span><span class="face back">Three fried potato
+                                croquettes. Served with rice, salad with ginger dressing, pickled vegetables, potato
+                                salad, seaweed salad, edamame, and tamago. <em>Vegetarian. All vegetarian
+                                    sides.</em></span></span></label><label class="slot"><input type="checkbox"><span
+                            class="inner"><span class="face"><span>Fish Katsu</span><span>$16</span></span><span
+                                class="face back">Three pieces of white fish, flounder or snapper, covered with panko
+                                breadcrumbs and deep-fried.</span></span></label>
+                </div>
+                <div class="panel p1">
+                    <p class="note">Served with salad with ginger dressing, seaweed salad, edamame, potato salad,
+                        tamago, cake, and a daily side dish.</p><label class="slot"><input type="checkbox"><span
+                            class="inner"><span class="face"><span>Katsuya Roll</span><span>$16</span></span><span
+                                class="face back">Tuna, salmon, crab, tempura shrimp, avocado, and scallions.
+                                <em>Contains raw fish.</em></span></span></label><label class="slot"><input
+                            type="checkbox"><span class="inner"><span class="face"><span>Alaskan
+                                    Roll</span><span>$14</span></span><span class="face back">California roll with
+                                imitation crab meat, cucumber, avocado, and rice, topped with seared Alaskan king
+                                salmon.</span></span></label><label class="slot"><input type="checkbox"><span
+                            class="inner"><span class="face"><span>Spicy Salmon Roll</span><span>$14</span></span><span
+                                class="face back">California roll with imitation crab meat, cucumber, avocado, and rice,
+                                topped with spicy salmon, house sauce, and scallions. <em>Contains raw
+                                    fish.</em></span></span></label><label class="slot"><input type="checkbox"><span
+                            class="inner"><span class="face"><span>Spicy Tuna Roll</span><span>$14</span></span><span
+                                class="face back">California roll with imitation crab meat, cucumber, avocado, and rice,
+                                topped with spicy tuna and Sriracha. <em>Contains raw
+                                    fish.</em></span></span></label><label class="slot"><input type="checkbox"><span
+                            class="inner"><span class="face"><span>Crunch Roll</span><span>$14</span></span><span
+                                class="face back">California roll with imitation crab meat, cucumber, avocado, and rice,
+                                topped with crab meat, crunch mix, and house sauce.</span></span></label><label
+                        class="slot"><input type="checkbox"><span class="inner"><span class="face"><span>Fried Philly
+                                    Roll</span><span>$14</span></span><span class="face back">Deep-fried roll with cream
+                                cheese, avocado, salmon, eel sauce, and spicy mayo.</span></span></label><label
+                        class="slot"><input type="checkbox"><span class="inner"><span class="face"><span>Veggie
+                                    Roll</span><span>$14</span></span><span class="face back">Cucumber, avocado, and
+                                mixed vegetables wrapped in seaweed paper.
+                                <em>Vegetarian.</em></span></span></label><label class="slot"><input
+                            type="checkbox"><span class="inner"><span class="face"><span>King Kong
+                                    Roll</span><span>$16</span></span><span class="face back">Deep-fried roll with two
+                                tempura shrimp, tuna, cucumber, avocado, and imitation crab meat. Topped with eel sauce
+                                and spicy mayo.</span></span></label><label class="slot"><input type="checkbox"><span
+                            class="inner"><span class="face"><span>Spider Roll</span><span>$17</span></span><span
+                                class="face back">Fried soft-shell crab, imitation crab meat, cucumber, avocado, and
+                                masago, topped with eel sauce.</span></span></label><label class="slot"><input
+                            type="checkbox"><span class="inner"><span class="face"><span>Salmon Nigiri
+                                    (6)</span><span>$16</span></span><span class="face back">Six pieces. Slices of
+                                salmon placed on top of sushi rice.</span></span></label>
+                    <div class="slot"><span class="inner"><span class="face"><span>Shrimp Nigiri
+                                    (6)</span><span>$16</span></span></span></div><label class="slot"><input
+                            type="checkbox"><span class="inner"><span class="face"><span>Salmon/Shrimp Nigiri
+                                    (6)</span><span>$16.50</span></span><span class="face back">Three salmon nigiri and
+                                three shrimp nigiri.</span></span></label><label class="slot"><input
+                            type="checkbox"><span class="inner"><span class="face"><span>Salmon/Avocado
+                                    Roll</span><span>$14</span></span><span class="face back">Salmon and
+                                avocado.</span></span></label>
+                </div>
+                <div class="panel p2">
+                    <p class="note">Individual sushi orders, packed with ginger, wasabi, and soy sauce.</p><label
+                        class="slot"><input type="checkbox"><span class="inner"><span class="face"><span>Single Cali
+                                    Roll</span><span>$7.50</span></span><span class="face back">California roll with
+                                imitation crab meat, cucumber, avocado, and rice, wrapped in seaweed
+                                paper.</span></span></label><label class="slot"><input type="checkbox"><span
+                            class="inner"><span class="face"><span>Single Katsuya
+                                    Roll</span><span>$11</span></span><span class="face back">Tuna, salmon, imitation
+                                crab meat, tempura shrimp, avocado, and scallions. <em>Contains raw
+                                    fish.</em></span></span></label><label class="slot"><input type="checkbox"><span
+                            class="inner"><span class="face"><span>Single Alaskan
+                                    Roll</span><span>$10</span></span><span class="face back">California roll with
+                                imitation crab meat, cucumber, avocado, and rice, topped with seared Alaskan king
+                                salmon. <em>Contains raw fish.</em></span></span></label><label class="slot"><input
+                            type="checkbox"><span class="inner"><span class="face"><span>Single Spicy
+                                    Salmon</span><span>$10</span></span><span class="face back">California roll with
+                                imitation crab meat, cucumber, avocado, and rice, topped with spicy salmon, house sauce,
+                                and scallions. <em>Contains raw fish.</em></span></span></label><label
+                        class="slot"><input type="checkbox"><span class="inner"><span class="face"><span>Single Spicy
+                                    Tuna Roll</span><span>$10</span></span><span class="face back">California roll with
+                                imitation crab meat, cucumber, avocado, and rice, topped with spicy tuna, Sriracha
+                                sauce, and scallions. <em>Contains raw fish.</em></span></span></label><label
+                        class="slot"><input type="checkbox"><span class="inner"><span class="face"><span>Single Crunch
+                                    Roll</span><span>$10</span></span><span class="face back">California roll with
+                                imitation crab meat, cucumber, avocado, and rice, topped with crab meat, crunch mix, and
+                                house sauce.</span></span></label><label class="slot"><input type="checkbox"><span
+                            class="inner"><span class="face"><span>Single Fried
+                                    Philly</span><span>$10</span></span><span class="face back">Deep-fried roll with
+                                cream cheese, avocado, salmon, imitation crab meat, eel sauce, and spicy
+                                mayo.</span></span></label><label class="slot"><input type="checkbox"><span
+                            class="inner"><span class="face"><span>Single Veggie Roll</span><span>$8</span></span><span
+                                class="face back">Cucumber, avocado, and mixed vegetables rolled with rice and seaweed
+                                paper.</span></span></label><label class="slot"><input type="checkbox"><span
+                            class="inner"><span class="face"><span>Single King Kong
+                                    Roll</span><span>$11</span></span><span class="face back">Deep-fried roll with two
+                                tempura shrimp, tuna, cucumber, avocado, and imitation crab meat. Topped with eel sauce
+                                and spicy mayo.</span></span></label><label class="slot"><input type="checkbox"><span
+                            class="inner"><span class="face"><span>Salmon Nigiri (6)</span><span>$12</span></span><span
+                                class="face back">Six pieces. Slices of salmon placed on top of sushi
+                                rice.</span></span></label>
+                    <div class="slot"><span class="inner"><span class="face"><span>Shrimp Nigiri
+                                    (6)</span><span>$12</span></span></span></div><label class="slot"><input
+                            type="checkbox"><span class="inner"><span class="face"><span>Salmon/Shrimp Nigiri
+                                    (6)</span><span>$12.50</span></span><span class="face back">Three salmon nigiri and
+                                three shrimp nigiri.</span></span></label>
+                    <div class="slot"><span class="inner"><span class="face"><span>Single Salmon/Avocado
+                                    Roll</span><span>$8</span></span></span></div>
+                </div>
+                <div class="panel p3">
+                    <p class="note">Soup, salads, and small plates.</p>
+                    <div class="slot"><span class="inner"><span class="face"><span>Miso
+                                    Soup</span><span>$2.50</span></span></span></div>
+                    <div class="slot"><span class="inner"><span
+                                class="face"><span>Rice</span><span>$2.50</span></span></span></div>
+                    <div class="slot"><span class="inner"><span class="face"><span>Egg Roll
+                                    (2)</span><span>$6</span></span></span></div>
+                    <div class="slot"><span class="inner"><span class="face"><span>Vegetable Egg Roll
+                                    (2)</span><span>$6</span></span></span></div>
+                    <div class="slot"><span class="inner"><span class="face"><span>Crab Rangoon
+                                    (5)</span><span>$6.50</span></span></span></div>
+                    <div class="slot"><span class="inner"><span class="face"><span>Gyoza
+                                    (6)</span><span>$6.50</span></span></span></div>
+                    <div class="slot"><span class="inner"><span class="face"><span>Curry
+                                    Sauce</span><span>$3.50</span></span></span></div><label class="slot"><input
+                            type="checkbox"><span class="inner"><span class="face"><span>Katsuya
+                                    Salad</span><span>$3.50</span></span><span class="face back">House salad served with
+                                ginger dressing.</span></span></label>
+                    <div class="slot"><span class="inner"><span class="face"><span>Seaweed
+                                    Salad</span><span>$5.50</span></span></span></div><label class="slot"><input
+                            type="checkbox"><span class="inner"><span class="face"><span>Takoyaki
+                                    (6)</span><span>$6.50</span></span><span class="face back">Six ball-shaped Japanese
+                                snacks made with wheat-based batter and filled with minced
+                                octopus.</span></span></label>
+                    <div class="slot"><span class="inner"><span class="face"><span>House
+                                    Kimchi</span><span>$3</span></span></span></div><label class="slot"><input
+                            type="checkbox"><span class="inner"><span class="face"><span>Potato Korokke
+                                    (2)</span><span>$6</span></span><span class="face back">Two mashed potato croquettes
+                                coated with panko breadcrumbs and deep-fried. <em>Vegetarian.</em></span></span></label>
+                </div>
+            </div>
+        </div>
     </section>
-
-    <section class="belt">
-        <div class="a"><span>Looking forward to hosting you soon!</span><span>Looking forward to hosting you
-                soon!</span><span>Looking forward to hosting you soon!</span><span>Looking forward to hosting you
-                soon!</span></div>
-        <div class="b"><span>Looking forward to hosting you soon!</span><span>Looking forward to hosting you
-                soon!</span><span>Looking forward to hosting you soon!</span><span>Looking forward to hosting you
-                soon!</span></div>
+    <div class="closing">
+        <div class="lid"></div>
+        <p>Looking forward to hosting you soon!</p>
+    </div>
+    <section id="about" class="full alt">
+        <h2>We use the best ingredients and provide a great atmosphere.</h2>
+        <div class="pair"><video src="bts.mov" autoplay muted loop playsinline></video><img src="owners.JPG"
+                alt="Jack Li and Dae Lee"></div>
+        <p class="pills"><a href="https://www.yelp.com/biz/katsuya-stl-university-city" target="_blank">Katsuya on
+                Yelp</a> <a href="https://www.instagram.com/katsuyastl/" target="_blank">@katsuyastl on Instagram</a>
+        </p>
     </section>
-
-    <section class="cats" id="menu">
-        <a href="#">Katsu Bento</a>
-        <a href="#">Sushi Bento</a>
-        <a href="#">À La Carte</a>
-        <a href="#">Side Dishes</a>
+    <section id="location" class="full">
+        <h2>Find us on Delmar.</h2>
+        <div class="tray"><img src="inside.jpg" alt=""><img src="outside.JPG" alt=""><iframe title="Map"
+                src="https://www.google.com/maps?q=Katsuya+6301+Delmar+Blvd+St.+Louis+MO+63130&amp;output=embed"
+                loading="lazy"></iframe></div>
+        <address>6301 Delmar Blvd<br>St. Louis, MO 63130</address>
+        <p class="hours">Open daily 11am–8pm</p>
+        <p class="pills"><a href="tel:+13142963368">(314) 296-3368</a></p>
     </section>
-
-    <section class="foot" id="visit">
-        <b>6301 Delmar Blvd, St. Louis</b>
-        Open daily 11am–8pm<br>(314) 296-3368
-    </section>
+    <footer><img class="badge" src="Logo.png" alt="">
+        <div class="wordmark">KATSUYA</div>
+    </footer>
 </body>
 
 </html>
