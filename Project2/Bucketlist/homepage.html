@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Bucket List</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&display=swap">
+<style>
+:root {
+  --osd: #f4f4f0;
+  --dim: #8d877c;
+  --red: rgba(255, 40, 60, .75);
+  --cyan: rgba(40, 200, 255, .75);
+  --date: #ffb23e;
+  --deco-red: #ee5b2f;
+  --yellow: #f3cf55;
+  --ink: #1f1d1a;
+  --f-osd: "VT323", monospace;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; background: #0b0b0d; }
+body { font-family: var(--f-osd); color: var(--osd); }
+
+.fx { position: fixed; inset: 0; pointer-events: none; z-index: 5; }
+.scan { background: repeating-linear-gradient(transparent 0 1px, rgba(0,0,0,.28) 1px 3px); }
+.vig { background: radial-gradient(ellipse, transparent 55%, rgba(0,0,0,.65)); }
+#noise { width: 100%; height: 100%; opacity: .06; mix-blend-mode: screen; transition: opacity .12s; }
+#noise.burst { opacity: .95; mix-blend-mode: normal; }
+
+.osd { line-height: 1; letter-spacing: .04em; text-shadow: -2px 0 var(--red), 2px 0 var(--cyan), 3px 3px 0 #000; }
+
+.wrap { max-width: 720px; margin: 0 auto; padding: 32px 24px 56px; display: grid; gap: 36px; }
+
+.top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; font-size: 26px; }
+.sticker { cursor: pointer; border: 0; font: 20px var(--f-osd); letter-spacing: .04em; color: var(--ink); background: var(--yellow);
+  padding: 6px 14px 7px; border-radius: 999px; transform: rotate(3deg); box-shadow: 0 4px 10px rgba(0,0,0,.4); }
+.sticker:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+
+h1 { margin: 0; font-weight: 400; font-size: clamp(56px, 11vw, 96px); line-height: .9; color: var(--deco-red);
+  text-shadow: 3px 3px 0 #1a120e, 6px 6px 10px rgba(0,0,0,.5); }
+
+ol { list-style: none; margin: 0; padding: 0; display: grid; }
+li a { display: grid; grid-template-columns: 34px 1fr auto; align-items: center; gap: 16px; padding: 14px 4px;
+  border-bottom: 1px dashed rgba(244,244,240,.18); color: var(--osd); text-decoration: none; font-size: clamp(26px, 4.4vw, 34px); }
+li:first-child a { border-top: 1px dashed rgba(244,244,240,.18); }
+.box { width: 26px; height: 26px; border: 2px solid var(--osd); display: grid; place-items: center; font-size: 26px; line-height: 1; color: var(--date); }
+.done .box::after { content: "✓"; transform: translate(2px, -3px); }
+.done .title { text-decoration: line-through; text-decoration-color: var(--date); text-decoration-thickness: 2px; }
+.when { font-size: 20px; color: var(--dim); white-space: nowrap; }
+li a:hover .when, li a:focus-visible .when { color: var(--osd); }
+li a:hover .when::before, li a:focus-visible .when::before { content: "▶ "; white-space: pre; }
+li a:hover, li a:focus-visible { background: rgba(244,244,240,.05); outline: none; }
+li a:focus-visible { box-shadow: inset 0 0 0 2px var(--osd); }
+
+footer { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 18px; color: var(--dim); }
+footer small { color: var(--date); font-size: 1em; }
+
+@media (max-width: 520px) {
+  .wrap { padding: 24px 16px 44px; }
+  li a { grid-template-columns: 28px 1fr; gap: 12px; }
+  .when { grid-column: 2; }
+}
+</style>
+</head>
+<body>
+<div class="fx"><canvas id="noise" width="200" height="120"></canvas></div>
+<div class="fx scan"></div>
+<div class="fx vig"></div>
+
+<div class="wrap">
+  <div class="top osd">
+    <span>MENU ▤</span>
+    <button class="sticker" id="mute">♪ tap for music</button>
+  </div>
+
+  <h1 class="osd">MY BUCKET LIST</h1>
+
+  <ol id="list"></ol>
+
+  <footer class="osd">
+    <span>PICK ONE TO PLAY · SPACE ▸ NEXT · ESC ▸ EJECT</span>
+    <span>♪ EPIPHANY · <small>FROM "SOUL"</small></span>
+  </footer>
+</div>
+
+<script>
+// done: true puts a check in the box
+const ITEMS = [
+  { title: "Go to the moon",          href: "go-to-the-moon/index.html",      when: "AGE 7" },
+  { title: "Get a dog",               href: "get-a-dog/index.html",           when: "AGE 10", done: true },
+  { title: "My first national park",  href: "first-national-park/index.html", when: "AGE 20", done: true },
+  { title: "Scuba diving in Hawaii",  href: "scuba-hawaii/index.html",        when: "AGE 21" },
+  { title: "Hang gliding in Rio",     href: "hang-gliding-rio/index.html",    when: "AGE 22" },
+  { title: "Grow old",                href: "grow-old/index.html",            when: "AGE 80" },
+];
+
+const noise = document.getElementById("noise");
+const list = document.getElementById("list");
+ITEMS.forEach(it => {
+  const li = document.createElement("li");
+  li.innerHTML = `<a href="${it.href}" class="osd${it.done ? " done" : ""}">
+    <span class="box"></span><span class="title">${it.title}</span><span class="when">${it.when}</span></a>`;
+  li.querySelector("a").addEventListener("click", e => {
+    e.preventDefault();
+    noise.classList.add("burst");
+    setTimeout(() => { location.href = it.href; }, 350);
+  });
+  list.append(li);
+});
+
+const nctx = noise.getContext("2d"), nimg = nctx.createImageData(noise.width, noise.height);
+(function draw() {
+  const d = nimg.data;
+  for (let i = 0; i < d.length; i += 4) { d[i] = d[i + 1] = d[i + 2] = Math.random() * 255; d[i + 3] = 255; }
+  nctx.putImageData(nimg, 0, 0);
+  requestAnimationFrame(draw);
+})();
+window.addEventListener("pageshow", () => noise.classList.remove("burst"));
+
+const START = 44;
+const music = new Audio("epiphany.mp3");
+music.volume = 0.7;
+const muteBtn = document.getElementById("mute");
+let on = false;
+music.addEventListener("loadedmetadata", () => { if (!on) music.currentTime = START; }, { once: true });
+music.addEventListener("ended", () => { music.currentTime = START; music.play(); });
+function setOn(v) { on = v; muteBtn.textContent = v ? "♪ music on" : "♪ music off"; }
+function play() {
+  if (music.currentTime < START) music.currentTime = START;
+  return music.play().then(() => setOn(true));
+}
+muteBtn.addEventListener("click", e => {
+  e.stopPropagation();
+  if (on) { music.pause(); setOn(false); } else play().catch(() => {});
+});
+play().catch(() => {
+  const first = e => { if (!e.target.closest || !e.target.closest("#mute")) play().catch(() => {}); };
+  window.addEventListener("pointerdown", first, { once: true });
+  window.addEventListener("keydown", first, { once: true });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Get a Dog</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&display=swap">
+<style>
+:root {
+  --vhs-blue: #1a24c8;
+  --osd: #f4f4f0;
+  --red: rgba(255, 40, 60, .75);
+  --cyan: rgba(40, 200, 255, .75);
+  --date: #ffb23e;
+  --kraft: #c9a272;
+  --yellow: #f3cf55;
+  --ink: #1f1d1a;
+  --stamp-red: #d2453a;
+  --f-osd: "VT323", monospace;
+  --deco-red: #ee5b2f;
+  --deco-cream: #f3e6c4;
+  --f-msg: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  --imsg-blue: #0a84ff;
+  --imsg-grey: #e9e9eb;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; height: 100%; background: #050506; overflow: hidden; }
+body { font-family: var(--f-osd); color: var(--osd); }
+#stage { position: fixed; inset: 0; overflow: hidden; }
+
+.clip { position: absolute; inset: -6px; visibility: hidden; }
+.clip.on { visibility: visible; animation: jitter 5s steps(1) infinite; }
+.clip video, .clip img { width: 100%; height: 100%; object-fit: cover; display: block;
+  filter: contrast(1.18) saturate(1.35) sepia(.12) blur(.6px); }
+.clip.final.on img { animation: drift 40s ease-out forwards; }
+.clip.final img.fit { position: absolute; inset: 0; object-fit: contain; }
+.clip.final img.fill { filter: blur(28px) brightness(.6) saturate(1.2); transform: scale(1.15); animation: none !important; }
+@keyframes jitter { 0%,100% { transform: none; } 31% { transform: translate(1px,-1px); } 32% { transform: translate(-2px,1px); } 33% { transform: none; } 71% { transform: translate(-1px,2px) skewX(.4deg); } 72% { transform: none; } }
+@keyframes drift { from { transform: scale(1.1); } to { transform: scale(1); } }
+
+.fx { position: absolute; inset: 0; pointer-events: none; }
+.scan { background: repeating-linear-gradient(transparent 0 1px, rgba(0,0,0,.28) 1px 3px); }
+.vig { background: radial-gradient(ellipse, transparent 58%, rgba(0,0,0,.6)); }
+.fringe { box-shadow: inset 3px 0 var(--red), inset -3px 0 var(--cyan); opacity: .25; }
+#noise { width: 100%; height: 100%; opacity: .07; mix-blend-mode: screen; transition: opacity .12s; }
+#noise.burst { opacity: .9; mix-blend-mode: normal; }
+#band { position: absolute; left: 0; right: 0; height: 9vh; mix-blend-mode: screen; animation: roll 7s linear infinite;
+  background: linear-gradient(transparent, rgba(255,255,255,.16), transparent); }
+#band.fast { animation-duration: .5s; height: 22vh; background: linear-gradient(transparent, rgba(255,255,255,.35), transparent); }
+@keyframes roll { from { top: -12vh; } to { top: 110vh; } }
+
+.osd { color: var(--osd); line-height: 1; letter-spacing: .04em;
+  text-shadow: -2px 0 var(--red), 2px 0 var(--cyan), 3px 3px 0 #000; }
+.corner { position: absolute; font-size: clamp(22px, 3vw, 40px); }
+.tl { top: 18px; left: 24px; }
+.tr { top: 18px; right: 24px; text-align: right; }
+.bl { bottom: 96px; left: 24px; color: var(--date); }
+.br { bottom: 96px; right: 24px; text-align: right; }
+
+#song { position: absolute; right: 24px; bottom: 180px; text-align: right; font-size: clamp(16px, 2vw, 26px);
+  line-height: 1.15; opacity: 0; transition: opacity .6s steps(4); }
+#song.on { opacity: 1; }
+#song small { font-size: .8em; color: var(--date); }
+
+#count { position: absolute; left: 50%; top: 46%; translate: -50% -50%; text-align: center; }
+#count .lbl { font-size: clamp(24px, 3.4vw, 46px); }
+#count .num { font-size: clamp(140px, 30vw, 380px); line-height: .85; }
+#count .num.word { font-size: clamp(80px, 15vw, 210px); }
+#count.hit .num { animation: hit .9s steps(1); }
+#count.flash .num { animation: flash .5s steps(1) 4; }
+@keyframes hit { 0% { transform: translateX(-6px) scaleY(1.08); opacity: .5; } 6% { transform: translateX(3px); opacity: 1; } 12% { transform: none; } }
+@keyframes flash { 50% { opacity: .15; } }
+
+#mission { position: absolute; top: 62px; left: 24px; display: grid; gap: 2px; }
+#mission small { font: clamp(18px, 1.8vw, 24px) var(--f-osd); letter-spacing: .4em; color: var(--deco-cream);
+  text-shadow: 2px 2px 0 #1a120e; }
+#mission span { font: clamp(40px, 5vw, 72px)/.85 var(--f-osd); white-space: nowrap; letter-spacing: .04em; color: var(--deco-red);
+  text-shadow: 3px 3px 0 #1a120e, 5px 5px 8px rgba(0,0,0,.45); }
+
+#chat { position: absolute; top: 180px; bottom: 190px; left: 24px; width: min(400px, 38vw);
+  display: flex; flex-direction: column; justify-content: flex-end; gap: 8px; overflow: hidden; padding: 6px;
+  -webkit-mask-image: linear-gradient(transparent, #000 48px); mask-image: linear-gradient(transparent, #000 48px); }
+.msg { align-self: flex-start; max-width: 92%; padding: 0 6px; filter: drop-shadow(0 3px 6px rgba(0,0,0,.55));
+  transform: rotate(var(--r)); animation: slap .35s cubic-bezier(.2,1.4,.4,1); }
+.msg.me { align-self: flex-end; }
+.msg.out { animation: lift .4s ease-in forwards; }
+.bubble { position: relative; padding: 7px 13px 8px; border-radius: 17px; background: var(--imsg-grey); color: #111;
+  font: 400 clamp(13px, 1.1vw, 15px)/1.3 var(--f-msg); }
+.me .bubble { background: var(--imsg-blue); color: #fff; }
+.bubble::after { content: ""; position: absolute; bottom: 0; left: -5px; width: 14px; height: 14px; background: inherit;
+  clip-path: polygon(100% 0, 100% 100%, 0 100%); }
+.me .bubble::after { left: auto; right: -5px; clip-path: polygon(0 0, 100% 100%, 0 100%); }
+.bubble b { display: block; font-size: .7em; font-weight: 600; letter-spacing: .04em; color: #6b6b70; margin-bottom: 1px; }
+.typing .bubble { display: flex; gap: 4px; padding: 11px 14px; }
+.typing i { width: 7px; height: 7px; border-radius: 50%; background: currentColor; opacity: .5; animation: dot 1s infinite; }
+.typing i:nth-child(2) { animation-delay: .15s; } .typing i:nth-child(3) { animation-delay: .3s; }
+@keyframes dot { 0%, 60%, 100% { transform: none; opacity: .4; } 30% { transform: translateY(-3px); opacity: 1; } }
+@keyframes slap { from { opacity: 0; transform: rotate(calc(var(--r) * 3)) scale(1.2); } }
+@keyframes lift { to { opacity: 0; transform: rotate(var(--r)) translateY(10px) scale(.96); } }
+
+.stamp { position: absolute; right: 5vw; top: 34vh; color: var(--stamp-red); outline: 4px solid var(--stamp-red); border-radius: 6px;
+  padding: .15em .45em; font: clamp(28px, 4vw, 56px) var(--f-osd); letter-spacing: .1em; text-transform: uppercase;
+  transform: rotate(-4deg); animation: slap .35s cubic-bezier(.2,1.4,.4,1); --r: -4deg; }
+
+.track { position: absolute; left: 16px; right: 16px; bottom: 16px; height: 50px; padding: 0 14px; display: flex; align-items: center; gap: 16px;
+  background: var(--kraft); transform: rotate(-.5deg); box-shadow: 0 6px 14px rgba(0,0,0,.5);
+  font-family: var(--f-osd); font-size: 20px; letter-spacing: .08em; color: var(--ink); }
+.lane { position: relative; flex: 1; border-top: 3px dashed rgba(31,29,26,.55); }
+#rocket { position: absolute; left: 0; width: 34px; translate: -50% -55%; }
+
+.sticker { position: absolute; cursor: pointer; border: 0; font: 24px var(--f-osd); letter-spacing: .04em; color: var(--ink); background: var(--yellow);
+  padding: 6px 16px 8px; border-radius: 999px; transform: rotate(3deg); box-shadow: 0 4px 10px rgba(0,0,0,.4); }
+#eject { top: 18px; left: 50%; translate: -50% 0; font-size: 20px; }
+.sticker:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+#mute { top: 64px; right: 24px; font-size: 20px; }
+#next, #again { left: 50%; bottom: 118px; translate: -50% 0; font-size: 26px; }
+#next.ready { animation: nudge 1.4s ease-in-out infinite; }
+@keyframes nudge { 0%,100% { transform: rotate(3deg) scale(1); } 50% { transform: rotate(-2deg) scale(1.08); } }
+#hint { position: absolute; left: 50%; bottom: 80px; translate: -50% 0; font-size: clamp(16px, 1.8vw, 24px); white-space: nowrap; }
+
+#start { position: absolute; inset: 0; z-index: 20; display: grid; place-content: center; gap: 18px; text-align: center;
+  border: 0; cursor: pointer; background: var(--vhs-blue); font: inherit; }
+#start .play { font-size: clamp(64px, 12vw, 150px); }
+#start .sub { font-size: clamp(22px, 3vw, 38px); }
+.blink { animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="fx" id="fx">
+    <canvas id="noise" width="200" height="120"></canvas>
+    <div class="fx scan"></div>
+    <div id="band"></div>
+    <div class="fx fringe"></div>
+    <div class="fx vig"></div>
+  </div>
+
+  <div class="osd corner tl" id="mode">PLAY ▶</div>
+  <div class="osd corner tr">SP</div>
+  <div class="osd corner bl"><span id="date"></span><br><span id="clock"></span></div>
+  <div class="osd corner br"><span id="miles"></span><br><span id="counter"></span></div>
+
+  <div class="osd" id="song"><span id="songTitle"></span><br><small id="songBy"></small></div>
+  <div class="osd" id="count" hidden><div class="lbl"></div><div class="num"></div></div>
+  <div id="mission"><small>MISSION</small><span id="missionName"></span></div>
+  <div id="chat"></div>
+  <div id="cards"></div>
+
+  <div class="track">
+    <span id="tripFrom"></span>
+    <div class="lane">
+      <svg id="rocket" viewBox="0 0 40 20">
+        <path d="M2 10 L8 6 L8 14 Z" fill="#d2453a"/>
+        <path d="M8 6 H28 Q38 10 28 14 H8 Z" fill="#fbf8ef" stroke="#1f1d1a" stroke-width="1.5"/>
+        <circle cx="24" cy="10" r="2.2" fill="#8fb8e8" stroke="#1f1d1a"/>
+        <path d="M12 6 L9 1 L16 6 Z M12 14 L9 19 L16 14 Z" fill="#d2453a"/>
+      </svg>
+    </div>
+    <span id="tripTo"></span>
+  </div>
+
+  <div class="osd" id="hint"></div>
+  <button class="sticker" id="next">next stop ▶▶</button>
+  <button class="sticker" id="again" hidden>rewind &amp; play again ↺</button>
+  <button class="sticker" id="eject">⏏ eject</button>
+  <button class="sticker" id="mute">♪ music on</button>
+
+  <button class="osd" id="start" hidden>
+    <span class="corner tl" id="startVideo">VIDEO 1</span><span class="corner tr">SP</span>
+    <span class="play">▶ PLAY</span>
+    <span class="sub" id="startTape"></span>
+    <span class="sub blink">PRESS ANYWHERE</span>
+  </button>
+</div>
+
+<script>
+const SCENE = {
+  mission: "GET A DOG",
+  tape: "TAPE 002 · HOME",
+  tapeDate: "DEC 20 2016",
+  tapeTime: [4, 5, "PM"],
+  them: "MOM",
+
+  trip: { from: "2016", to: "2026", start: 0, end: 10, unit: "YRS", label: "HER AGE " },
+
+  music: {
+    src: "assets/All_Good_Dogs.mp3", startAt: 0, volume: 0.8, fadeOut: 5, loop: true,
+    title: "All Good Dogs", artist: "Theodore Shapiro", from: "Marley & Me"
+  },
+
+  stages: [
+    { src: "assets/puppy.JPG", image: true, next: "ten years later ▶▶", thoughts: [
+      { date: "DEC 20 2016", age: 0, me: "can we PLEASE get a dog. I'll walk it every day. I promise." },
+      { from: "MOM", them: "close your eyes and hold out your hands" },
+      { me: "IS THAT A PUPPY" },
+      { me: "her name is lily 🌼" },
+      { src: "assets/puppy2.JPG", me: "she fits in one hand. best early christmas present ever" },
+      { src: "assets/Puppy3.JPG", me: "took her shopping. she rode in the cart like a princess" },
+      { src: "assets/puppy4.JPG", date: "JUL 04 2017", me: "car rides were our thing" },
+    ]},
+    { src: "assets/Dog_now.mp4", loop: true, thoughts: [
+      { date: "AUG 22 2024", age: 7, me: "leaving for college was hard mostly because of her" },
+      { date: "NOV 10 2026", age: 10, me: "lily is 10 now. a little gray around the nose" },
+      { me: "still my best friend." },
+      { stamp: "Mission complete" },
+    ]},
+  ]
+};
+
+const $ = id => document.getElementById(id);
+const cardsEl = $("cards"), chatEl = $("chat"), countEl = $("count"), noise = $("noise"), band = $("band"), songEl = $("song");
+const nextBtn = $("next"), againBtn = $("again"), hintEl = $("hint");
+const pad = n => String(n).padStart(2, "0");
+const clamp = x => Math.max(0, Math.min(1, x));
+const T = SCENE.trip;
+
+$("missionName").textContent = SCENE.mission;
+$("startTape").textContent = SCENE.tape;
+$("date").textContent = SCENE.tapeDate;
+$("tripFrom").textContent = T.from;
+$("tripTo").textContent = T.to;
+if (SCENE.music) {
+  $("songTitle").textContent = "♪ " + SCENE.music.title.toUpperCase();
+  $("songBy").textContent = `${SCENE.music.artist} · from "${SCENE.music.from}"`.toUpperCase();
+} else {
+  $("mute").hidden = true;
+}
+
+const stages = SCENE.stages;
+stages.forEach(st => {
+  const wrap = document.createElement("div");
+  wrap.className = "clip" + (st.image ? " final" : "");
+  const media = document.createElement(st.image ? "img" : "video");
+  media.src = st.src;
+  if (!st.image) { media.muted = true; media.playsInline = true; media.preload = "auto"; }
+  if (st.image) {
+    const fill = document.createElement("img");
+    fill.className = "fill"; fill.src = st.src; fill.alt = "";
+    media.className = "fit";
+    wrap.append(fill);
+    st.fill = fill;
+  }
+  wrap.append(media);
+  $("stage").insertBefore(wrap, $("fx"));
+  st.wrap = wrap; st.media = media;
+});
+
+const nctx = noise.getContext("2d");
+const nimg = nctx.createImageData(noise.width, noise.height);
+function drawNoise() {
+  const d = nimg.data;
+  for (let i = 0; i < d.length; i += 4) { d[i] = d[i + 1] = d[i + 2] = Math.random() * 255; d[i + 3] = 255; }
+  nctx.putImageData(nimg, 0, 0);
+}
+
+let actx;
+function hiss(sec) {
+  if (!soundOn) return;
+  try {
+    actx = actx || new AudioContext();
+    const len = actx.sampleRate * sec, buf = actx.createBuffer(1, len, actx.sampleRate), ch = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) ch[i] = (Math.random() * 2 - 1) * (1 - i / len);
+    const src = actx.createBufferSource(), g = actx.createGain();
+    g.gain.value = .12; src.buffer = buf; src.connect(g).connect(actx.destination); src.start();
+  } catch (e) {}
+}
+
+function staticBurst(ms = 380) {
+  noise.classList.add("burst"); band.classList.add("fast"); hiss(ms / 1000);
+  setTimeout(() => { noise.classList.remove("burst"); band.classList.remove("fast"); }, ms);
+}
+
+function showThought(th) {
+  if (th.src) { staticBurst(220); setTimeout(() => { const st = stages[idx]; st.media.src = th.src; if (st.fill) st.fill.src = th.src; }, 110); }
+  if (th.date) $("date").textContent = th.date;
+  if (th.age !== undefined) trip = clamp((th.age - T.start) / (T.end - T.start));
+  if (th.stamp) {
+    const el = document.createElement("div");
+    el.className = "stamp";
+    el.textContent = th.stamp;
+    cardsEl.append(el);
+    return;
+  }
+  const me = "me" in th;
+  const el = document.createElement("div");
+  el.className = "msg" + (me ? " me" : "");
+  el.style.setProperty("--r", (Math.random() * 4 - 2).toFixed(1) + "deg");
+  const bubble = document.createElement("div");
+  bubble.className = "bubble";
+  bubble.innerHTML = (me ? "" : `<b>${th.from || SCENE.them}</b>`) + (me ? th.me : th.them);
+  el.append(bubble);
+  chatEl.append(el);
+}
+function clearCards() {
+  [...chatEl.children, ...cardsEl.children].forEach(el => {
+    el.classList.add("out");
+    setTimeout(() => el.remove(), 400);
+  });
+}
+
+function flashCount(label, word) {
+  countEl.hidden = false;
+  countEl.querySelector(".lbl").textContent = word ? SCENE.countdown.goLabel : SCENE.countdown.label;
+  const num = countEl.querySelector(".num");
+  num.textContent = label;
+  num.classList.toggle("word", word);
+  countEl.classList.remove("hit", "flash");
+  void countEl.offsetWidth;
+  countEl.classList.add(word ? "flash" : "hit");
+}
+let counting = false;
+function runCountdown(done) {
+  counting = true;
+  nextBtn.hidden = true;
+  hintEl.textContent = "";
+  let n = SCENE.countdown.from;
+  const step = () => {
+    if (n > 0) { flashCount(String(n--), false); setTimeout(step, 900); }
+    else {
+      flashCount(SCENE.countdown.go, true);
+      setTimeout(() => { countEl.hidden = true; counting = false; done(); }, 1100);
+    }
+  };
+  step();
+}
+
+let songTimer;
+function showSong(sec) {
+  if (!SCENE.music) return;
+  clearTimeout(songTimer);
+  songEl.classList.add("on");
+  if (sec) songTimer = setTimeout(() => songEl.classList.remove("on"), sec * 1000);
+}
+
+let idx = 0, shown = 0, trip = 0, finished = false, finishedAt = 0, sceneStart = 0, running = false;
+
+function updateControls() {
+  const st = stages[idx], total = st.thoughts.length, last = idx === stages.length - 1;
+  const allShown = shown >= total;
+  hintEl.textContent = allShown
+    ? (last ? "" : "PRESS → FOR THE NEXT STOP")
+    : `PRESS SPACE ▸ NEXT THOUGHT ${shown + 1}/${total}`;
+  nextBtn.hidden = last;
+  nextBtn.textContent = st.next || "next ▶▶";
+  nextBtn.classList.toggle("ready", allShown);
+  if (last && allShown && !finished) finish();
+}
+
+let typing = false;
+function nextThought() {
+  if (!running || counting || typing) return;
+  const st = stages[idx];
+  if (shown >= st.thoughts.length) return;
+  const th = st.thoughts[shown++];
+  if (!st.slow || th.stamp) { showThought(th); updateControls(); return; }
+  typing = true;
+  const dots = document.createElement("div");
+  dots.className = "msg typing" + ("me" in th ? " me" : "");
+  dots.style.setProperty("--r", "0deg");
+  dots.innerHTML = '<div class="bubble"><i></i><i></i><i></i></div>';
+  chatEl.append(dots);
+  setTimeout(() => { dots.remove(); typing = false; showThought(th); updateControls(); }, 1300);
+}
+
+function goTo(i) {
+  idx = i; shown = 0;
+  const st = stages[i];
+  clearCards();
+  if (i > 0) staticBurst();
+  setTimeout(() => {
+    stages.forEach((q, k) => {
+      q.wrap.classList.toggle("on", k === i);
+      if (k !== i && !q.image) q.media.pause();
+    });
+    if (!st.image) {
+      st.media.currentTime = 0;
+      st.media.play().catch(() => st.media.addEventListener("canplay", () => st.media.play(), { once: true }));
+    }
+  }, i > 0 ? 160 : 0);
+  updateControls();
+}
+
+function nextStage() {
+  if (!running || counting || idx >= stages.length - 1) return;
+  if (stages[idx].countdown) runCountdown(() => goTo(idx + 1));
+  else goTo(idx + 1);
+}
+
+function finish() {
+  finished = true;
+  finishedAt = performance.now();
+  $("mode").textContent = "STOP ■";
+  againBtn.hidden = false;
+  showSong(0);
+}
+
+function tick() {
+  requestAnimationFrame(tick);
+  drawNoise();
+  if (!running) return;
+
+  const st = stages[idx];
+  let f = 1;
+  if (!st.image) {
+    const v = st.media;
+    const len = Math.min(v.duration || Infinity, st.endAt || Infinity);
+    if (v.currentTime >= len || v.ended) {
+      if (st.loop) { v.currentTime = 0; v.play(); } else if (!v.paused) v.pause();
+    }
+    f = isFinite(len) ? clamp(v.currentTime / len) : 0;
+  }
+  if (st.trip && !finished) trip = Math.max(trip, st.trip[0] + (st.trip[1] - st.trip[0]) * f);
+  $("rocket").style.left = trip * 100 + "%";
+  $("miles").textContent = (T.label + Math.round(T.start + (T.end - T.start) * trip).toLocaleString() + " " + T.unit).trim();
+
+  const s = Math.floor((performance.now() - sceneStart) / 1000);
+  const [h, m, ap] = SCENE.tapeTime, mm = m + Math.floor(s / 60);
+  $("counter").textContent = `0:${pad(Math.floor(s / 60))}:${pad(s % 60)}`;
+  $("clock").textContent = `${ap} ${h + Math.floor(mm / 60)}:${pad(mm % 60)}:${pad(s % 60)}`;
+
+  if (music && finished && !music.paused) {
+    const k = 1 - (performance.now() - finishedAt) / 1000 / SCENE.music.fadeOut;
+    music.volume = Math.max(0, SCENE.music.volume * k);
+    if (k <= 0) music.pause();
+  }
+}
+
+const music = SCENE.music ? new Audio(SCENE.music.src) : null;
+if (music) music.loop = !!SCENE.music.loop;
+if (music) music.addEventListener("loadedmetadata", () => { if (!running) music.currentTime = SCENE.music.startAt; }, { once: true });
+let soundOn = true;
+
+function begin() {
+  $("start").hidden = true;
+  againBtn.hidden = true;
+  songEl.classList.remove("on");
+  finished = false; trip = 0;
+  $("mode").textContent = "PLAY ▶";
+  $("date").textContent = SCENE.tapeDate;
+  if (music) {
+    music.currentTime = SCENE.music.startAt;
+    music.volume = SCENE.music.volume;
+    if (soundOn) music.play().catch(() => {});
+  }
+  sceneStart = performance.now();
+  running = true;
+  staticBurst(300);
+  goTo(0);
+  showSong(6);
+}
+
+document.addEventListener("keydown", e => {
+  if (e.code === "Space") { e.preventDefault(); nextThought(); }
+  if (e.code === "ArrowRight" || e.code === "Enter") { e.preventDefault(); nextStage(); }
+});
+$("stage").addEventListener("click", e => { if (!e.target.closest("button")) nextThought(); });
+nextBtn.addEventListener("click", nextStage);
+$("mute").addEventListener("click", () => {
+  soundOn = !soundOn;
+  $("mute").textContent = soundOn ? "♪ music on" : "♪ music off";
+  if (soundOn && !finished) { music.volume = SCENE.music.volume; music.play(); } else music.pause();
+});
+againBtn.addEventListener("click", () => { $("mode").textContent = "◀◀ REW"; staticBurst(600); setTimeout(begin, 600); });
+$("start").addEventListener("click", begin);
+
+if (music) music.play().then(begin).catch(() => { $("start").hidden = false; });
+else begin();
+function eject() {
+  $("mode").textContent = "⏏ EJECT";
+  staticBurst(500);
+  if (typeof music !== "undefined" && music) music.pause();
+  setTimeout(() => { location.href = "../homepage.html"; }, 500);
+}
+$("eject").addEventListener("click", eject);
+document.addEventListener("keydown", e => { if (e.code === "Escape") eject(); });
+
+requestAnimationFrame(tick);
+</script>
+</body>
+</html>
